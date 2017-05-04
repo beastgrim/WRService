@@ -14,6 +14,8 @@
 		908978761EBB4CB8002D20A8 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 908978751EBB4CB8002D20A8 /* Assets.xcassets */; };
 		908978791EBB4CB8002D20A8 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 908978771EBB4CB8002D20A8 /* LaunchScreen.storyboard */; };
 		908978841EBB4CB8002D20A8 /* WRServiceTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 908978831EBB4CB8002D20A8 /* WRServiceTests.m */; };
+		908978911EBB4D16002D20A8 /* WRService.m in Sources */ = {isa = PBXBuildFile; fileRef = 908978901EBB4D16002D20A8 /* WRService.m */; };
+		908978941EBB4DFF002D20A8 /* WROperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 908978931EBB4DFF002D20A8 /* WROperation.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -40,6 +42,13 @@
 		9089787F1EBB4CB8002D20A8 /* WRServiceTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = WRServiceTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		908978831EBB4CB8002D20A8 /* WRServiceTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = WRServiceTests.m; sourceTree = "<group>"; };
 		908978851EBB4CB8002D20A8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		9089788F1EBB4D16002D20A8 /* WRService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WRService.h; sourceTree = "<group>"; };
+		908978901EBB4D16002D20A8 /* WRService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WRService.m; sourceTree = "<group>"; };
+		908978921EBB4DFF002D20A8 /* WROperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WROperation.h; sourceTree = "<group>"; };
+		908978931EBB4DFF002D20A8 /* WROperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WROperation.m; sourceTree = "<group>"; };
+		908978951EBB68E7002D20A8 /* WRProgressProtocol.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WRProgressProtocol.h; sourceTree = "<group>"; };
+		908978961EBB6D29002D20A8 /* WRSourceProrocol.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WRSourceProrocol.h; sourceTree = "<group>"; };
+		908978971EBB82BF002D20A8 /* WROperation_Private.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WROperation_Private.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -63,6 +72,7 @@
 		9089785D1EBB4CB8002D20A8 = {
 			isa = PBXGroup;
 			children = (
+				9089788E1EBB4CEF002D20A8 /* Source */,
 				908978681EBB4CB8002D20A8 /* WRService */,
 				908978821EBB4CB8002D20A8 /* WRServiceTests */,
 				908978671EBB4CB8002D20A8 /* Products */,
@@ -109,6 +119,20 @@
 				908978851EBB4CB8002D20A8 /* Info.plist */,
 			);
 			path = WRServiceTests;
+			sourceTree = "<group>";
+		};
+		9089788E1EBB4CEF002D20A8 /* Source */ = {
+			isa = PBXGroup;
+			children = (
+				9089788F1EBB4D16002D20A8 /* WRService.h */,
+				908978901EBB4D16002D20A8 /* WRService.m */,
+				908978921EBB4DFF002D20A8 /* WROperation.h */,
+				908978931EBB4DFF002D20A8 /* WROperation.m */,
+				908978971EBB82BF002D20A8 /* WROperation_Private.h */,
+				908978951EBB68E7002D20A8 /* WRProgressProtocol.h */,
+				908978961EBB6D29002D20A8 /* WRSourceProrocol.h */,
+			);
+			path = Source;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -216,7 +240,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				908978711EBB4CB8002D20A8 /* ViewController.m in Sources */,
+				908978911EBB4D16002D20A8 /* WRService.m in Sources */,
 				9089786E1EBB4CB8002D20A8 /* AppDelegate.m in Sources */,
+				908978941EBB4DFF002D20A8 /* WROperation.m in Sources */,
 				9089786B1EBB4CB8002D20A8 /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
