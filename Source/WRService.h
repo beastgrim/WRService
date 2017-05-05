@@ -19,6 +19,9 @@ NS_ASSUME_NONNULL_BEGIN
 + (instancetype) shared;
 
 - (void) execute:(WROperation*)op onSuccess:(WRSuccessCallback)success onFail:(WRFailCallback __nullable)fail;
+- (void) execute:(WROperation*)op withDelegate:(id<WROperationDelegate>)delegate;
+- (void) cancelTasksWithDelegate:(id)delegate;
+- (void) cancelAllTasks;
 //- (void) execute:(WROperation *)op withAutoCancelTarget:(__weak id __nullable)target onSuccess:(WRSuccessCallback)success onFail:(WRFailCallback __nullable)fail;
 
 

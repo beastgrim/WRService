@@ -16,6 +16,7 @@
 		908978841EBB4CB8002D20A8 /* WRServiceTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 908978831EBB4CB8002D20A8 /* WRServiceTests.m */; };
 		908978911EBB4D16002D20A8 /* WRService.m in Sources */ = {isa = PBXBuildFile; fileRef = 908978901EBB4D16002D20A8 /* WRService.m */; };
 		908978941EBB4DFF002D20A8 /* WROperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 908978931EBB4DFF002D20A8 /* WROperation.m */; };
+		9089789A1EBC95D4002D20A8 /* WRQueue.m in Sources */ = {isa = PBXBuildFile; fileRef = 908978991EBC95D4002D20A8 /* WRQueue.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -49,6 +50,8 @@
 		908978951EBB68E7002D20A8 /* WRProgressProtocol.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WRProgressProtocol.h; sourceTree = "<group>"; };
 		908978961EBB6D29002D20A8 /* WRSourceProrocol.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WRSourceProrocol.h; sourceTree = "<group>"; };
 		908978971EBB82BF002D20A8 /* WROperation_Private.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WROperation_Private.h; sourceTree = "<group>"; };
+		908978981EBC95D4002D20A8 /* WRQueue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WRQueue.h; sourceTree = "<group>"; };
+		908978991EBC95D4002D20A8 /* WRQueue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WRQueue.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -126,6 +129,8 @@
 			children = (
 				9089788F1EBB4D16002D20A8 /* WRService.h */,
 				908978901EBB4D16002D20A8 /* WRService.m */,
+				908978981EBC95D4002D20A8 /* WRQueue.h */,
+				908978991EBC95D4002D20A8 /* WRQueue.m */,
 				908978921EBB4DFF002D20A8 /* WROperation.h */,
 				908978931EBB4DFF002D20A8 /* WROperation.m */,
 				908978971EBB82BF002D20A8 /* WROperation_Private.h */,
@@ -239,6 +244,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9089789A1EBC95D4002D20A8 /* WRQueue.m in Sources */,
 				908978711EBB4CB8002D20A8 /* ViewController.m in Sources */,
 				908978911EBB4D16002D20A8 /* WRService.m in Sources */,
 				9089786E1EBB4CB8002D20A8 /* AppDelegate.m in Sources */,

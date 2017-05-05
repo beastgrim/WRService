@@ -9,10 +9,16 @@
 #import "WROperation.h"
 #import "WROperation_Private.h"
 
+typedef NS_OPTIONS(NSUInteger, WRDelegateOption) {
+    WRDelegateOptionSuccess = 1 << 0,
+    WRDelegateOptionError = 1 << 1
+};
+
 @interface WROperation() <WROperationPrivate>
 
-@end
+@property (readwrite, getter=isFinished) BOOL finished;
 
+@end
 
 
 @implementation WROperation {
@@ -22,6 +28,7 @@
     uint8_t _progress;
     BOOL _useProgress;
     NSURLSessionTask *_task;
+    WRDelegateOption _delegateSettings;
 }
 
 
@@ -50,16 +57,29 @@
 }
 
 
+- (void)cancel {
+    self.successCallback = nil;
+    self.failCallback = nil;
+    self.delegate = nil;
+    self.progressDelegate = nil;
+    self.progressCallback = nil;
+    [_task cancel];
+}
+
+
 #pragma mark - Private
 
 - (void) _calculateProgress {
     float progress = (float)_data.length/_expectedContentLength;
-    
-    if (_useProgress) {
-        [_progressDelegate operation:self didChangeProgress:progress];
-    }
+
     if (_progressCallback) {
-        _progressCallback(progress);
+        dispatch_async(dispatch_get_main_queue(), ^{
+            _progressCallback(progress);
+        });
+    } else if (_useProgress) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [_progressDelegate operation:self didChangeProgress:progress];
+        });
     }
 }
 
@@ -77,10 +97,33 @@
 
 #pragma mark - Setters
 
+- (void)setPriority:(WROperationPriority)priority {
+    if (_priority != priority) {
+        _priority = priority;
+    }
+}
+
 - (void)setProgressDelegate:(id<WRProgressProtocol>)progressDelegate {
     if (_progressDelegate != progressDelegate) {
         _progressDelegate = progressDelegate;
         _useProgress = [_progressDelegate respondsToSelector:@selector(operation:didChangeProgress:)];
+    }
+}
+
+- (void)setDelegate:(id<WROperationDelegate>)delegate {
+    if (_delegate != delegate) {
+        _delegate = delegate;
+        
+        if (_cancelDelegate == nil) {
+            _cancelDelegate = delegate;
+        }
+        
+        if ([delegate respondsToSelector:@selector(operation:didFinishWithResult:)]) {
+            _delegateSettings |= WRDelegateOptionSuccess;
+        }
+        if ([delegate respondsToSelector:@selector(operation:didFailWithError:)]) {
+            _delegateSettings |= WRDelegateOptionError;
+        }
     }
 }
 
@@ -100,22 +143,36 @@
 
 - (void)didCompleteWithError:(NSError * _Nullable )error {
     
+    self.finished = YES;
+    
     if (error) {
         if (_failCallback) {
-            _failCallback(self, error);
+            dispatch_async(dispatch_get_main_queue(), ^{
+                _failCallback(self, error);
+            });
+        } else
+        if (_delegateSettings & WRDelegateOptionError) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [_delegate operation:self didFailWithError:error];
+            });
         }
     } else {
         if (_successCallback) {
-            _successCallback(self, _data);
+            dispatch_async(dispatch_get_main_queue(), ^{
+                _successCallback(self, _data);
+            });
+        } else
+        if (_delegateSettings & WRDelegateOptionSuccess) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [_delegate operation:self didFinishWithResult:_data];
+            });
         }
     }
 }
 
 - (void)didReceiveData:(NSData *)data {
     [_data appendData:data];
-    if (_useProgress) {
-        [self _calculateProgress];
-    }
+    [self _calculateProgress];
 }
 
 @end

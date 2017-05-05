@@ -7,20 +7,20 @@
 //
 
 #import "WRService.h"
+#import "WRQueue.h"
 #import "WROperation_Private.h"
 
-@interface WRService() <NSURLSessionDelegate, NSURLSessionTaskDelegate, NSURLSessionDataDelegate>
+@interface WRService()
 
 
 
 @end
 
 @implementation WRService {
-    NSOperationQueue * _highQueue;
-    NSOperationQueue * _defaultQueue;
-    NSURLSession * _urlSession;
+    WRQueue * _backgroundQueue;
+    WRQueue * _defaultQueue;
     dispatch_queue_t _queue;
-    NSMutableDictionary <NSNumber*, WROperation*> * _operations;
+    NSUInteger _countExclusiveTasks;
 }
 
 + (instancetype)shared {
@@ -39,8 +39,8 @@
     if (self) {
         
         _queue = dispatch_queue_create("wr_service_queue", nil);
-        _operations = [NSMutableDictionary new];
         
+        /*
         _highQueue = [NSOperationQueue new];
         _highQueue.name = @"High";
         _highQueue.maxConcurrentOperationCount = 3;
@@ -49,9 +49,14 @@
         _defaultQueue.name = @"Default";
         _defaultQueue.maxConcurrentOperationCount = 10;
         _defaultQueue.qualityOfService = NSQualityOfServiceBackground;
+        */
         
         NSURLSessionConfiguration *conf = [NSURLSessionConfiguration defaultSessionConfiguration];
-        _urlSession = [NSURLSession sessionWithConfiguration:conf delegate:self delegateQueue:nil];
+        _defaultQueue = [[WRQueue alloc] initWithConfiguration:conf queue:_queue];
+        _defaultQueue.defaultTaskPriority = 0.6;
+        conf.networkServiceType = NSURLNetworkServiceTypeBackground;
+        _backgroundQueue = [[WRQueue alloc] initWithConfiguration:conf queue:_queue];
+        _backgroundQueue.defaultTaskPriority = 0.3;
     }
     return self;
 }
@@ -60,84 +65,84 @@
 #pragma mark - Public
 
 - (void)execute:(WROperation *)op onSuccess:(WRSuccessCallback)success onFail:(WRFailCallback)fail {
-    NSURLSessionDataTask *t = [_urlSession dataTaskWithURL:op.url];
     
-    [op setSessionTask:t];
-    [self _registerTask:op];
-    op.failCallback = fail;
     op.successCallback = success;
+    op.failCallback = fail;
     
-    [t resume];
+    [self _executeOperation:op];
+}
+
+- (void)execute:(WROperation *)op withDelegate:(id<WROperationDelegate>)delegate {
+    
+    op.delegate = delegate;
+    
+    [self _executeOperation:op];
+}
+
+- (void)cancelTasksWithDelegate:(id)delegate {
+    [_defaultQueue cancelTasksWithDelegate:delegate];
+    [_backgroundQueue cancelTasksWithDelegate:delegate];
+}
+
+- (void)cancelAllTasks {
+    
 }
 
 
 #pragma mark - Private
 
-- (void) _registerTask:(WROperation*)op {
-    dispatch_sync(_queue, ^{
-        [_operations setObject:op forKey:@([op taskIdentifier])];
-    });
-}
-
-- (void) _unregisterTask:(WROperation*)op {
-    dispatch_sync(_queue, ^{
-        [_operations removeObjectForKey:@([op taskIdentifier])];
-    });
-}
-
-- (WROperation*) operationOfTask:(NSURLSessionTask*)task {
-    __block WROperation *op = nil;
-    dispatch_sync(_queue, ^{
-        op = [_operations objectForKey:@(task.taskIdentifier)];
-    });
-    return op;
-}
-
-
-#pragma mark - NSURLSessionDelegate
-
-- (void)URLSession:(NSURLSession *)session didBecomeInvalidWithError:(nullable NSError *)error {
-    NSLog(@"didBecomeInvalidWithError: %@", error);
-}
-
-- (void)URLSession:(NSURLSession *)session didReceiveChallenge:(NSURLAuthenticationChallenge *)challenge
- completionHandler:(void (^)(NSURLSessionAuthChallengeDisposition disposition, NSURLCredential * _Nullable credential))completionHandler {
-
-    NSLog(@"didReceiveChallenge: %@", challenge);
-
-}
-
-- (void)URLSessionDidFinishEventsForBackgroundURLSession:(NSURLSession *)session {
-    NSLog(@"URLSessionDidFinishEventsForBackgroundURLSession: %@", session);
-}
-
-
-#pragma mark - NSURLSessionTaskDelegate
-
-- (void)URLSession:(NSURLSession *)session task:(NSURLSessionTask *)task didCompleteWithError:(nullable NSError *)error {
+- (void) _executeOperation:(WROperation *)op {
     
-    WROperation *op = [self operationOfTask:task];
-    [op didCompleteWithError:error];
-
-    [self _unregisterTask:op];
+    switch (op.priority) {
+        case WROperationPriorityDefault:
+            [_defaultQueue execute:op];
+            
+            break;
+            
+        case WROperationPriorityBackground:
+            [_backgroundQueue execute:op];
+            
+            break;
+            
+        case WROperationPriorityExclusive:
+            
+            if (_countExclusiveTasks == 0) {
+                [_defaultQueue suspendAllTasks];
+                [_backgroundQueue suspendAllTasks];
+            }
+            
+            _countExclusiveTasks++;
+            [_defaultQueue execute:op];
+            
+            [op addObserver:self forKeyPath:@"finished" options:NSKeyValueObservingOptionNew context:(__bridge void * _Nullable)(self)];
+            break;
+    }
 }
 
+- (BOOL)countExclusiveTasks {
+    NSInteger count = [_defaultQueue countExclusiveTasks];
 
-#pragma mark - NSURLSessionDataDelegate
-
-- (void)URLSession:(NSURLSession *)session dataTask:(NSURLSessionDataTask *)dataTask
-    didReceiveData:(NSData *)data {
-    WROperation *op = [self operationOfTask:dataTask];
-    [op didReceiveData:data];
+    return count;
 }
 
-- (void)URLSession:(NSURLSession *)session dataTask:(NSURLSessionDataTask *)dataTask didReceiveResponse:(NSURLResponse *)response completionHandler:(void (^)(NSURLSessionResponseDisposition))completionHandler
+- (void) resumeAllTasks {
+    [_defaultQueue resumeAllTasks];
+    [_backgroundQueue resumeAllTasks];
+}
+
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
 {
-    completionHandler(NSURLSessionResponseAllow);
-    
-    long long size = [response expectedContentLength];
-    WROperation *op = [self operationOfTask:dataTask];
-    [op setContentLength:size];
+    if (context == (__bridge void * _Nullable)(self)) {
+        NSLog(@"Exclusive task KVO");
+        [object removeObserver:self forKeyPath:@"finished" context:(__bridge void * _Nullable)(self)];
+        _countExclusiveTasks--;
+
+        if (_countExclusiveTasks == 0) {
+            [self resumeAllTasks];
+        }
+    } else {
+        [super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
+    }
 }
 
 @end
