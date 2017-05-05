@@ -9,6 +9,9 @@
 #import "WRQueue.h"
 #import "WROperation_Private.h"
 
+NSErrorDomain const WRQueueErrorDomain = @"WRQueueErrorDomain";
+
+
 @interface WRQueue() <NSURLSessionDelegate, NSURLSessionTaskDelegate, NSURLSessionDataDelegate>
 
 @end
@@ -63,13 +66,18 @@
 }
 
 - (void)execute:(WROperation *)op {
-    NSURLSessionDataTask *t = [_session dataTaskWithRequest:op.request];
-    t.priority = _defaultTaskPriority;
-    
-    [op setSessionTask:t];
-    [self _registerTask:op];
-    
-    [t resume];
+    if (op.taskIdentifier > 0) {
+        NSError *err = [NSError errorWithDomain:WRQueueErrorDomain code:WRQueueErrorTaskAlreadyPerforming userInfo:nil];
+        NSLog(@"ERROR execute operation: %@", err);
+    } else {
+        NSURLSessionDataTask *t = [_session dataTaskWithRequest:op.request];
+        t.priority = _defaultTaskPriority;
+        
+        [op setSessionTask:t];
+        [self _registerTask:op];
+        
+        [t resume];
+    }
 }
 
 - (void)cancelTasksWithDelegate:(id)delegate {
@@ -145,8 +153,8 @@
 - (void)URLSession:(NSURLSession *)session didReceiveChallenge:(NSURLAuthenticationChallenge *)challenge
  completionHandler:(void (^)(NSURLSessionAuthChallengeDisposition disposition, NSURLCredential * _Nullable credential))completionHandler {
     
+    completionHandler(NSURLSessionAuthChallengePerformDefaultHandling, nil);
     NSLog(@"didReceiveChallenge: %@", challenge);
-    
 }
 
 - (void)URLSessionDidFinishEventsForBackgroundURLSession:(NSURLSession *)session {

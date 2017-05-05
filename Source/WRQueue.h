@@ -11,6 +11,12 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+extern NSErrorDomain const WRQueueErrorDomain;
+typedef NS_ENUM(NSUInteger, WRQueueError) {
+    WRQueueErrorUnknown = 0,
+    WRQueueErrorTaskAlreadyPerforming
+};
+
 @interface WRQueue : NSObject
 
 @property (nonatomic, assign, readonly) NSInteger countExclusiveTasks;

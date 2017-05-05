@@ -14,7 +14,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @protocol WROperationDelegate;
 
-typedef void (^WRSuccessCallback)(WROperation *op, NSData *data);
+typedef void (^WRSuccessCallback)(WROperation *op, id result);
 typedef void (^WRFailCallback)(WROperation *op, NSError *error);
 typedef void (^WRProgressCallback)(float progress);
 typedef NS_ENUM(NSInteger, WROperationPriority) {
@@ -54,6 +54,12 @@ typedef NS_ENUM(NSInteger, WROperationPriority) {
 - (instancetype) initWithUrl:(NSURL*)url;
 - (instancetype) initWithSource:(id<WRSourceProtocol>)source;
 
+/**
+ * Method name: processResult
+ * Description: You should override this method in your subclasses for modify result from nsdata to any object
+ * Parameters: id - Returns any object, not NIL!
+ */
+- (id) processResult:(id)result;
 - (void) cancel;
 
 @end

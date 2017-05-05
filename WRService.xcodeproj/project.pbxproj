@@ -17,6 +17,11 @@
 		908978911EBB4D16002D20A8 /* WRService.m in Sources */ = {isa = PBXBuildFile; fileRef = 908978901EBB4D16002D20A8 /* WRService.m */; };
 		908978941EBB4DFF002D20A8 /* WROperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 908978931EBB4DFF002D20A8 /* WROperation.m */; };
 		9089789A1EBC95D4002D20A8 /* WRQueue.m in Sources */ = {isa = PBXBuildFile; fileRef = 908978991EBC95D4002D20A8 /* WRQueue.m */; };
+		908978A11EBCBCBD002D20A8 /* HttpViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 908978A01EBCBCBD002D20A8 /* HttpViewController.m */; };
+		908978A41EBCBEF4002D20A8 /* WRObjectOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 908978A31EBCBEF4002D20A8 /* WRObjectOperation.m */; };
+		908978A71EBCC111002D20A8 /* Article.m in Sources */ = {isa = PBXBuildFile; fileRef = 908978A61EBCC111002D20A8 /* Article.m */; };
+		908978AA1EBCCBC2002D20A8 /* WRJSONOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 908978A91EBCCBC2002D20A8 /* WRJSONOperation.m */; };
+		908978AD1EBCCF74002D20A8 /* WRXMLOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 908978AC1EBCCF74002D20A8 /* WRXMLOperation.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -52,6 +57,17 @@
 		908978971EBB82BF002D20A8 /* WROperation_Private.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WROperation_Private.h; sourceTree = "<group>"; };
 		908978981EBC95D4002D20A8 /* WRQueue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WRQueue.h; sourceTree = "<group>"; };
 		908978991EBC95D4002D20A8 /* WRQueue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WRQueue.m; sourceTree = "<group>"; };
+		9089789B1EBCB8E3002D20A8 /* WRHTTPRequestProtocol.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WRHTTPRequestProtocol.h; sourceTree = "<group>"; };
+		9089789F1EBCBCBD002D20A8 /* HttpViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpViewController.h; sourceTree = "<group>"; };
+		908978A01EBCBCBD002D20A8 /* HttpViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HttpViewController.m; sourceTree = "<group>"; };
+		908978A21EBCBEF4002D20A8 /* WRObjectOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WRObjectOperation.h; sourceTree = "<group>"; };
+		908978A31EBCBEF4002D20A8 /* WRObjectOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WRObjectOperation.m; sourceTree = "<group>"; };
+		908978A51EBCC111002D20A8 /* Article.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Article.h; sourceTree = "<group>"; };
+		908978A61EBCC111002D20A8 /* Article.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Article.m; sourceTree = "<group>"; };
+		908978A81EBCCBC2002D20A8 /* WRJSONOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WRJSONOperation.h; sourceTree = "<group>"; };
+		908978A91EBCCBC2002D20A8 /* WRJSONOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WRJSONOperation.m; sourceTree = "<group>"; };
+		908978AB1EBCCF74002D20A8 /* WRXMLOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WRXMLOperation.h; sourceTree = "<group>"; };
+		908978AC1EBCCF74002D20A8 /* WRXMLOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WRXMLOperation.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -94,10 +110,14 @@
 		908978681EBB4CB8002D20A8 /* WRService */ = {
 			isa = PBXGroup;
 			children = (
+				9089789F1EBCBCBD002D20A8 /* HttpViewController.h */,
+				908978A01EBCBCBD002D20A8 /* HttpViewController.m */,
 				9089786C1EBB4CB8002D20A8 /* AppDelegate.h */,
 				9089786D1EBB4CB8002D20A8 /* AppDelegate.m */,
 				9089786F1EBB4CB8002D20A8 /* ViewController.h */,
 				908978701EBB4CB8002D20A8 /* ViewController.m */,
+				908978A51EBCC111002D20A8 /* Article.h */,
+				908978A61EBCC111002D20A8 /* Article.m */,
 				908978721EBB4CB8002D20A8 /* Main.storyboard */,
 				908978751EBB4CB8002D20A8 /* Assets.xcassets */,
 				908978771EBB4CB8002D20A8 /* LaunchScreen.storyboard */,
@@ -133,9 +153,16 @@
 				908978991EBC95D4002D20A8 /* WRQueue.m */,
 				908978921EBB4DFF002D20A8 /* WROperation.h */,
 				908978931EBB4DFF002D20A8 /* WROperation.m */,
+				908978A81EBCCBC2002D20A8 /* WRJSONOperation.h */,
+				908978A91EBCCBC2002D20A8 /* WRJSONOperation.m */,
+				908978AB1EBCCF74002D20A8 /* WRXMLOperation.h */,
+				908978AC1EBCCF74002D20A8 /* WRXMLOperation.m */,
+				908978A21EBCBEF4002D20A8 /* WRObjectOperation.h */,
+				908978A31EBCBEF4002D20A8 /* WRObjectOperation.m */,
 				908978971EBB82BF002D20A8 /* WROperation_Private.h */,
 				908978951EBB68E7002D20A8 /* WRProgressProtocol.h */,
 				908978961EBB6D29002D20A8 /* WRSourceProrocol.h */,
+				9089789B1EBCB8E3002D20A8 /* WRHTTPRequestProtocol.h */,
 			);
 			path = Source;
 			sourceTree = "<group>";
@@ -244,12 +271,17 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				908978A71EBCC111002D20A8 /* Article.m in Sources */,
+				908978AD1EBCCF74002D20A8 /* WRXMLOperation.m in Sources */,
 				9089789A1EBC95D4002D20A8 /* WRQueue.m in Sources */,
+				908978AA1EBCCBC2002D20A8 /* WRJSONOperation.m in Sources */,
 				908978711EBB4CB8002D20A8 /* ViewController.m in Sources */,
+				908978A41EBCBEF4002D20A8 /* WRObjectOperation.m in Sources */,
 				908978911EBB4D16002D20A8 /* WRService.m in Sources */,
 				9089786E1EBB4CB8002D20A8 /* AppDelegate.m in Sources */,
 				908978941EBB4DFF002D20A8 /* WROperation.m in Sources */,
 				9089786B1EBB4CB8002D20A8 /* main.m in Sources */,
+				908978A11EBCBCBD002D20A8 /* HttpViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -8,6 +8,8 @@
 
 #import "WROperation.h"
 #import "WROperation_Private.h"
+#import "WRHTTPRequestProtocol.h"
+
 
 typedef NS_OPTIONS(NSUInteger, WRDelegateOption) {
     WRDelegateOptionSuccess = 1 << 0,
@@ -66,6 +68,15 @@ typedef NS_OPTIONS(NSUInteger, WRDelegateOption) {
     [_task cancel];
 }
 
+/**
+ * Method name: processResult
+ * Description: Yuo should override this method in your subclasses for modify result from nsdata to any object
+ * Parameters: id - any object
+ */
+- (id)processResult:(id)result {
+    
+    return result;
+}
 
 #pragma mark - Private
 
@@ -87,6 +98,11 @@ typedef NS_OPTIONS(NSUInteger, WRDelegateOption) {
 #pragma mark - Getters
 
 - (NSURLRequest *)request {
+    if ([self conformsToProtocol:@protocol(WRHttpRequestProtocol)]) {
+        id <WRHttpRequestProtocol> obj = self;
+        NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:_url cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:obj.timeoutInterval];
+        return request;
+    }
     return [NSURLRequest requestWithURL:_url];
 }
 
@@ -157,14 +173,25 @@ typedef NS_OPTIONS(NSUInteger, WRDelegateOption) {
             });
         }
     } else {
-        if (_successCallback) {
+        id result = [self processResult:_data];
+        
+        if (result == nil) {
+            NSException *exeption = [[NSException alloc] initWithName:@"WROperationExeption" reason:@"Process result method return nil" userInfo:nil];
+            [exeption raise];
+        }
+        
+        if ([result isKindOfClass:[NSError class]]) {
+            [self didCompleteWithError:result];
+            
+        } if (_successCallback) {
+            
             dispatch_async(dispatch_get_main_queue(), ^{
-                _successCallback(self, _data);
+                _successCallback(self, result);
             });
-        } else
-        if (_delegateSettings & WRDelegateOptionSuccess) {
+        } else if (_delegateSettings & WRDelegateOptionSuccess) {
+            
             dispatch_async(dispatch_get_main_queue(), ^{
-                [_delegate operation:self didFinishWithResult:_data];
+                [_delegate operation:self didFinishWithResult:result];
             });
         }
     }
