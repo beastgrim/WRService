@@ -12,6 +12,8 @@
 #import "WRXMLOperation.h"
 #import "WRObjectOperation.h"
 #import "Article.h"
+#import "GitHubEvent.h"
+
 
 @interface HttpViewController () <WROperationDelegate>
 
@@ -22,25 +24,56 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
 
-//    NSURL *url = [NSURL URLWithString:@"http://ip.jsontest.com"];
-    NSURL *url = [NSURL URLWithString:@"https://storage.googleapis.com"];
+//    NSURL *url = [NSURL URLWithString:@"https://storage.googleapis.com"];
+
+    [self testGithubEventRequest];
+}
+
+
+- (void) testJSONEncoding {
+    NSURL *url = [NSURL URLWithString:@"http://ip.jsontest.com"];
     
-//    WRJSONOperation *op = [[WRJSONOperation alloc] initWithUrl:url];
-    WRXMLOperation *op = [[WRXMLOperation alloc] initWithUrl:url];
-    [[WRService shared] execute:op withDelegate:self];
+    Article *a = [Article testAtricle];
+
+    WRObjectOperation * objOp = [[WRObjectOperation alloc] initWithUrl:url requestJSONBody:a method:@"POST"];
     
     
-    WRObjectOperation * objOp = [[WRObjectOperation alloc] initWithClass:[Article class]];
-    
+    [[WRService shared] execute:objOp withDelegate:self];
+}
+
+- (void) testObjectOperation {
+    NSURL *url = [NSURL URLWithString:@"http://ip.jsontest.com"];
+
+    NSURLRequest *req = [NSURLRequest requestWithURL:url];
+    WRObjectOperation * objOp = [[WRObjectOperation alloc] initWithRequest:req resultClass:[Article class]];
+    objOp.progressCallback = ^(float progress) {
+        NSLog(@"Progress: %f", progress);
+    };
     NSLog(@"Operation: %@", objOp);
-//    [[WRService shared] execute:objOp withDelegate:self];
+    [[WRService shared] execute:objOp withDelegate:self];
+}
+
+- (void) testGithubEventRequest {
+    
+    NSURL *url = [NSURL URLWithString:@"https://api.github.com/events"];
+    NSURLRequest *req = [NSURLRequest requestWithURL:url];
+    
+    WRObjectOperation *op = [[WRObjectOperation alloc] initWithRequest:req resultClass:[GitHubEvent class]];
+    
+    [[WRService shared] execute:op withDelegate:self];
 }
 
 
 #pragma mark - WROperationDelegate
 
-- (void)operation:(WROperation *)op didFinishWithResult:(Article*)result {
-    NSLog(@"didFinishWithResult: %@", result);
+- (void)operation:(WROperation *)op didFinishWithResult:(NSArray<GitHubEvent*>*)result {
+    NSLog(@"didFinishWithResult: %@", [result debugDescription]);
+    
+//    GitHubEvent *e = result.firstObject;
+    
+//    for (GitHubEvent *e in result) {
+//        NSLog(@"Date: %@ - class: %@", e.created_at, NSStringFromClass([e.created_at class]));
+//    }
 }
 
 @end

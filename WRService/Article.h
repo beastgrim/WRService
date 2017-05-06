@@ -10,7 +10,7 @@
 #import "WRObjectOperation.h"
 
 
-@interface Article : NSObject <WRObjectOperationProtocol>
+@interface Article : NSObject <WRObjectOperationProtocol, WRJSONRepresentable>
 
 @property NSTimeInterval timeoutInterval;
 
@@ -22,8 +22,10 @@
 @property (nonatomic, copy) NSString * name;
 @property (nonatomic, strong) NSDictionary * info;
 @property (nonatomic, strong) NSDate *date;
+@property (nonatomic, strong) Article *parentArticle;
 
 
 + (instancetype) testAtricle;
++ (NSDictionary*) testJSON;
 
 @end

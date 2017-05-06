@@ -8,9 +8,10 @@
 
 #import <Foundation/Foundation.h>
 #import "WRProgressProtocol.h"
-#import "WRSourceProrocol.h"
 
 NS_ASSUME_NONNULL_BEGIN
+
+extern NSErrorDomain const WROperationErrorDomain;
 
 @protocol WROperationDelegate;
 
@@ -26,7 +27,7 @@ typedef NS_ENUM(NSInteger, WROperationPriority) {
 
 @interface WROperation : NSObject
 
-@property (nonatomic, readonly) NSURL *url;
+@property (nonatomic, readonly) NSURL * __nullable url;
 @property (nonatomic, readonly) NSURLRequest *request;
 
 @property (nonatomic, assign, readonly) NSUInteger taskIdentifier;
@@ -47,19 +48,26 @@ typedef NS_ENUM(NSInteger, WROperationPriority) {
 
 // KVO properties
 @property (readonly, getter=isFinished) BOOL finished;
+@property (readonly, assign) float progress;
 
 
 #pragma mark Initialize
 
-- (instancetype) initWithUrl:(NSURL*)url;
-- (instancetype) initWithSource:(id<WRSourceProtocol>)source;
+- (instancetype __nullable) initWithUrl:(NSURL*)url;
+- (instancetype __nullable) initWithRequest:(NSURLRequest*)request;
 
 /**
- * Method name: processResult
- * Description: You should override this method in your subclasses for modify result from nsdata to any object
- * Parameters: id - Returns any object, not NIL!
+ @brief Process data to convert to expected class.
+ 
+ You should override this method in your subclasses for modify result from nsdata to any object.
+ 
+ @param result any object
+ 
+ @return id any object that will be return your subclass.
  */
+
 - (id) processResult:(id)result;
+
 - (void) cancel;
 
 @end

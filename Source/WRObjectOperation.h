@@ -7,25 +7,69 @@
 //
 
 #import "WROperation.h"
-#import "WRHTTPRequestProtocol.h"
 
 
+NS_ASSUME_NONNULL_BEGIN
 
 
-@protocol WRObjectOperationProtocol <NSObject, WRHttpRequestProtocol>
+@protocol WRObjectOperationProtocol <NSObject>
 
-@required
-+ (NSURL*) urlForMethod:(NSString*)method;
+@optional
+
+- (instancetype) initFromXMLData:(NSData*)xmlData;
+- (instancetype) initFromJSONData:(NSData*)jsonData;
+
+/**
+ @brief Create your class instance from raw data.
+ @param jsonObject NSArray or NSDictionary
+ @return Class instance.
+ */
+
+- (instancetype) initFromJSONObject:(id)jsonObject;
 
 @end
 
 
+
+
+
+typedef NSString HTTPMethod;
+
+@protocol WRRequestProtocol <NSObject>
+
+@required
++ (NSURL*) urlForMethod:(HTTPMethod*)method;
+
+
+@end
+
+
+
+
+@protocol WRJSONRepresentable <WRObjectOperationProtocol, WRRequestProtocol>
+
+@required
+- (NSDictionary*) jsonRepresentation;
+
+@end
 
 
 
 
 @interface WRObjectOperation : WROperation
 
-- (instancetype)initWithClass:(Class<WRObjectOperationProtocol>)objClass;
+@property (nonatomic, readonly) NSString *className;
+
+/**
+ @brief Creates WRObjectOperation.
+ @param objClass instanse of this class will be returned on success.
+ @return WRObjectOperation instance or nil.
+ */
+
+- (instancetype __nullable)initWithRequest:(NSURLRequest*)request resultClass:(Class<WRObjectOperationProtocol>)objClass;
+
+- (instancetype __nullable)initWithUrl:(NSURL *)url requestJSONBody:(id<WRJSONRepresentable>)bodyObject method:(HTTPMethod*)method;
 
 @end
+
+NS_ASSUME_NONNULL_END

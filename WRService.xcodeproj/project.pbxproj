@@ -22,6 +22,8 @@
 		908978A71EBCC111002D20A8 /* Article.m in Sources */ = {isa = PBXBuildFile; fileRef = 908978A61EBCC111002D20A8 /* Article.m */; };
 		908978AA1EBCCBC2002D20A8 /* WRJSONOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 908978A91EBCCBC2002D20A8 /* WRJSONOperation.m */; };
 		908978AD1EBCCF74002D20A8 /* WRXMLOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 908978AC1EBCCF74002D20A8 /* WRXMLOperation.m */; };
+		979B00411EBDCCD300F94E24 /* NSObject_WRJSON.m in Sources */ = {isa = PBXBuildFile; fileRef = 979B00401EBDCCD300F94E24 /* NSObject_WRJSON.m */; };
+		979B00451EBE01AC00F94E24 /* GitHubEvent.m in Sources */ = {isa = PBXBuildFile; fileRef = 979B00441EBE01AC00F94E24 /* GitHubEvent.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -53,11 +55,9 @@
 		908978921EBB4DFF002D20A8 /* WROperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WROperation.h; sourceTree = "<group>"; };
 		908978931EBB4DFF002D20A8 /* WROperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WROperation.m; sourceTree = "<group>"; };
 		908978951EBB68E7002D20A8 /* WRProgressProtocol.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WRProgressProtocol.h; sourceTree = "<group>"; };
-		908978961EBB6D29002D20A8 /* WRSourceProrocol.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WRSourceProrocol.h; sourceTree = "<group>"; };
 		908978971EBB82BF002D20A8 /* WROperation_Private.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WROperation_Private.h; sourceTree = "<group>"; };
 		908978981EBC95D4002D20A8 /* WRQueue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WRQueue.h; sourceTree = "<group>"; };
 		908978991EBC95D4002D20A8 /* WRQueue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WRQueue.m; sourceTree = "<group>"; };
-		9089789B1EBCB8E3002D20A8 /* WRHTTPRequestProtocol.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WRHTTPRequestProtocol.h; sourceTree = "<group>"; };
 		9089789F1EBCBCBD002D20A8 /* HttpViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpViewController.h; sourceTree = "<group>"; };
 		908978A01EBCBCBD002D20A8 /* HttpViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HttpViewController.m; sourceTree = "<group>"; };
 		908978A21EBCBEF4002D20A8 /* WRObjectOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WRObjectOperation.h; sourceTree = "<group>"; };
@@ -68,6 +68,10 @@
 		908978A91EBCCBC2002D20A8 /* WRJSONOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WRJSONOperation.m; sourceTree = "<group>"; };
 		908978AB1EBCCF74002D20A8 /* WRXMLOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WRXMLOperation.h; sourceTree = "<group>"; };
 		908978AC1EBCCF74002D20A8 /* WRXMLOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WRXMLOperation.m; sourceTree = "<group>"; };
+		979B003F1EBDCCD300F94E24 /* NSObject_WRJSON.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSObject_WRJSON.h; sourceTree = "<group>"; };
+		979B00401EBDCCD300F94E24 /* NSObject_WRJSON.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSObject_WRJSON.m; sourceTree = "<group>"; };
+		979B00431EBE01AC00F94E24 /* GitHubEvent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GitHubEvent.h; sourceTree = "<group>"; };
+		979B00441EBE01AC00F94E24 /* GitHubEvent.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GitHubEvent.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -118,6 +122,8 @@
 				908978701EBB4CB8002D20A8 /* ViewController.m */,
 				908978A51EBCC111002D20A8 /* Article.h */,
 				908978A61EBCC111002D20A8 /* Article.m */,
+				979B00431EBE01AC00F94E24 /* GitHubEvent.h */,
+				979B00441EBE01AC00F94E24 /* GitHubEvent.m */,
 				908978721EBB4CB8002D20A8 /* Main.storyboard */,
 				908978751EBB4CB8002D20A8 /* Assets.xcassets */,
 				908978771EBB4CB8002D20A8 /* LaunchScreen.storyboard */,
@@ -152,19 +158,27 @@
 				908978981EBC95D4002D20A8 /* WRQueue.h */,
 				908978991EBC95D4002D20A8 /* WRQueue.m */,
 				908978921EBB4DFF002D20A8 /* WROperation.h */,
+				908978971EBB82BF002D20A8 /* WROperation_Private.h */,
 				908978931EBB4DFF002D20A8 /* WROperation.m */,
+				908978A21EBCBEF4002D20A8 /* WRObjectOperation.h */,
+				908978A31EBCBEF4002D20A8 /* WRObjectOperation.m */,
+				979B003F1EBDCCD300F94E24 /* NSObject_WRJSON.h */,
+				979B00401EBDCCD300F94E24 /* NSObject_WRJSON.m */,
+				908978951EBB68E7002D20A8 /* WRProgressProtocol.h */,
+				979B00421EBDEA0200F94E24 /* trash */,
+			);
+			path = Source;
+			sourceTree = "<group>";
+		};
+		979B00421EBDEA0200F94E24 /* trash */ = {
+			isa = PBXGroup;
+			children = (
 				908978A81EBCCBC2002D20A8 /* WRJSONOperation.h */,
 				908978A91EBCCBC2002D20A8 /* WRJSONOperation.m */,
 				908978AB1EBCCF74002D20A8 /* WRXMLOperation.h */,
 				908978AC1EBCCF74002D20A8 /* WRXMLOperation.m */,
-				908978A21EBCBEF4002D20A8 /* WRObjectOperation.h */,
-				908978A31EBCBEF4002D20A8 /* WRObjectOperation.m */,
-				908978971EBB82BF002D20A8 /* WROperation_Private.h */,
-				908978951EBB68E7002D20A8 /* WRProgressProtocol.h */,
-				908978961EBB6D29002D20A8 /* WRSourceProrocol.h */,
-				9089789B1EBCB8E3002D20A8 /* WRHTTPRequestProtocol.h */,
 			);
-			path = Source;
+			name = trash;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -216,7 +230,7 @@
 				TargetAttributes = {
 					908978651EBB4CB8002D20A8 = {
 						CreatedOnToolsVersion = 8.3;
-						DevelopmentTeam = 27FQ4THS6C;
+						DevelopmentTeam = N33586GXQE;
 						ProvisioningStyle = Automatic;
 					};
 					9089787E1EBB4CB8002D20A8 = {
@@ -274,6 +288,7 @@
 				908978A71EBCC111002D20A8 /* Article.m in Sources */,
 				908978AD1EBCCF74002D20A8 /* WRXMLOperation.m in Sources */,
 				9089789A1EBC95D4002D20A8 /* WRQueue.m in Sources */,
+				979B00451EBE01AC00F94E24 /* GitHubEvent.m in Sources */,
 				908978AA1EBCCBC2002D20A8 /* WRJSONOperation.m in Sources */,
 				908978711EBB4CB8002D20A8 /* ViewController.m in Sources */,
 				908978A41EBCBEF4002D20A8 /* WRObjectOperation.m in Sources */,
@@ -282,6 +297,7 @@
 				908978941EBB4DFF002D20A8 /* WROperation.m in Sources */,
 				9089786B1EBB4CB8002D20A8 /* main.m in Sources */,
 				908978A11EBCBCBD002D20A8 /* HttpViewController.m in Sources */,
+				979B00411EBDCCD300F94E24 /* NSObject_WRJSON.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -419,8 +435,9 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				DEVELOPMENT_TEAM = 27FQ4THS6C;
+				DEVELOPMENT_TEAM = N33586GXQE;
 				INFOPLIST_FILE = WRService/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = WR.WRService;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -431,8 +448,9 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				DEVELOPMENT_TEAM = 27FQ4THS6C;
+				DEVELOPMENT_TEAM = N33586GXQE;
 				INFOPLIST_FILE = WRService/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = WR.WRService;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -484,6 +502,7 @@
 				9089788A1EBB4CB8002D20A8 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		9089788B1EBB4CB8002D20A8 /* Build configuration list for PBXNativeTarget "WRServiceTests" */ = {
 			isa = XCConfigurationList;
@@ -492,6 +511,7 @@
 				9089788D1EBB4CB8002D20A8 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

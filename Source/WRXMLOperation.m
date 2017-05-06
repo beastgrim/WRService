@@ -80,35 +80,46 @@
     
     NSLog(@"didStartElement: %@, attributes: %@, qualifedName: %@", elementName, attributeDict, qName);
     
-    if (_xmlValue == nil) {
+    NSString *type = [attributeDict valueForKey:@"type"];
+    if (type) {
+        BOOL isArray = [[type lowercaseString] isEqualToString:@"array"];
+
+        if (isArray) {
+            
+        }
+    }
+    
+    NSString *prevTag = [self tag];
+    if (prevTag) {
+        NSDictionary *curDict = [_xmlParseResult objectForKey:prevTag];
+        [curDict setValue:[NSMutableDictionary new] forKeyPath:elementName];
+    } else {
         [_xmlParseResult setObject:[NSMutableDictionary new] forKey:elementName];
     }
+
     [self pushTag:elementName];
 }
 
 - (void)parser:(NSXMLParser *)parser foundCharacters:(NSString *)string {
     NSLog(@"foundCharacters: %@", string);
     _xmlValue = string;
-    
 }
 
 - (void)parser:(NSXMLParser *)parser didEndElement:(NSString *)elementName namespaceURI:(NSString *)namespaceURI qualifiedName:(NSString *)qName {
     NSLog(@"didEndElement: %@, qualifedName: %@, nameSpace: %@", elementName, qName, namespaceURI);
-    NSString *tag = [self popTag];
+    [self popTag];
     
     if (_xmlValue) {
-        
-        NSMutableDictionary *dict = [_xmlParseResult objectForKey:tag];
-//        if (dict == nil) {
-//            dict = [NSMutableDictionary dictionaryWithObject:_xmlValue forKey:tag];
-//        }
-        [dict setObject:_xmlValue forKey:tag];
+        NSString *prevTag = [self tag];
+
+        if (prevTag) {
+            NSDictionary *curDict = [_xmlParseResult objectForKey:prevTag];
+            [curDict setValue:_xmlValue forKeyPath:elementName];
+        } else {
+            [_xmlParseResult setObject:_xmlValue forKey:elementName];
+        }
         _xmlValue = nil;
     }
-//    else {
-//        NSMutableDictionary *dict = [NSMutableDictionary new];
-//        [_xmlParseResult setObject:dict forKey:elementName];
-//    }
 }
 
 - (void)parser:(NSXMLParser *)parser parseErrorOccurred:(NSError *)parseError {

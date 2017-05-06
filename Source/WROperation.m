@@ -8,8 +8,8 @@
 
 #import "WROperation.h"
 #import "WROperation_Private.h"
-#import "WRHTTPRequestProtocol.h"
 
+NSErrorDomain const WROperationErrorDomain = @"WROperationErrorDomain";
 
 typedef NS_OPTIONS(NSUInteger, WRDelegateOption) {
     WRDelegateOptionSuccess = 1 << 0,
@@ -19,6 +19,7 @@ typedef NS_OPTIONS(NSUInteger, WRDelegateOption) {
 @interface WROperation() <WROperationPrivate>
 
 @property (readwrite, getter=isFinished) BOOL finished;
+@property (readwrite, assign) float progress;
 
 @end
 
@@ -27,7 +28,6 @@ typedef NS_OPTIONS(NSUInteger, WRDelegateOption) {
     NSUInteger _taskIdentifier;
     long long _expectedContentLength;
     NSMutableData *_data;
-    uint8_t _progress;
     BOOL _useProgress;
     NSURLSessionTask *_task;
     WRDelegateOption _delegateSettings;
@@ -38,22 +38,30 @@ typedef NS_OPTIONS(NSUInteger, WRDelegateOption) {
 {
     if (url == nil) return nil;
 
-    self = [super init];
+    self = [self init];
     if (self) {
         _url = url;
-        _data = [NSMutableData new];
+        _request = [NSURLRequest requestWithURL:url];
      }
     return self;
 }
 
-- (instancetype)initWithSource:(id<WRSourceProtocol>)source
+- (instancetype)initWithRequest:(NSURLRequest *)request
 {
-    NSURL *url = [source sourceUrl];
-    if (url == nil) return nil;
+    if (request == nil) return nil;
 
+    self = [self init];
+    if (self) {
+        _request = request;
+    }
+    return self;
+}
+
+- (instancetype)init
+{
     self = [super init];
     if (self) {
-        _url = url;
+        _data = [NSMutableData new];
     }
     return self;
 }
@@ -68,11 +76,6 @@ typedef NS_OPTIONS(NSUInteger, WRDelegateOption) {
     [_task cancel];
 }
 
-/**
- * Method name: processResult
- * Description: Yuo should override this method in your subclasses for modify result from nsdata to any object
- * Parameters: id - any object
- */
 - (id)processResult:(id)result {
     
     return result;
@@ -82,7 +85,8 @@ typedef NS_OPTIONS(NSUInteger, WRDelegateOption) {
 
 - (void) _calculateProgress {
     float progress = (float)_data.length/_expectedContentLength;
-
+    self.progress = progress;
+    
     if (_progressCallback) {
         dispatch_async(dispatch_get_main_queue(), ^{
             _progressCallback(progress);
@@ -97,14 +101,14 @@ typedef NS_OPTIONS(NSUInteger, WRDelegateOption) {
 
 #pragma mark - Getters
 
-- (NSURLRequest *)request {
-    if ([self conformsToProtocol:@protocol(WRHttpRequestProtocol)]) {
-        id <WRHttpRequestProtocol> obj = self;
-        NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:_url cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:obj.timeoutInterval];
-        return request;
-    }
-    return [NSURLRequest requestWithURL:_url];
-}
+//- (NSURLRequest *)request {
+//    if ([self conformsToProtocol:@protocol(WRHttpRequestProtocol)]) {
+//        id <WRHttpRequestProtocol> obj = self;
+//        NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:_url cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:obj.timeoutInterval];
+//        return request;
+//    }
+//    return [NSURLRequest requestWithURL:_url];
+//}
 
 - (NSUInteger)taskIdentifier {
     return _taskIdentifier;
