@@ -1,9 +1,8 @@
 # WRService
 
-WRService is light and convinient tool for woking with internet. Every iOS application works with internet connection.
-This small framework gives you default setting for convinient work in most of applications.
+WRService is light and convinient tool for working with an API via NSURLSession  for most of applications.
 
-Standart configuration has 2 queues: default and background. Background queue has less priority than standart queue. Each quque is represented as an URLSession instance. 
+Standart configuration has 2 queues: default and background. Background queue has less priority than standart queue. Each quque is represented as an NSURLSession instance. 
 
 You get internet data throuth WROperations. There is an example:
 
@@ -19,7 +18,7 @@ You get internet data throuth WROperations. There is an example:
 
 
 
-You can get progress via block. Example:
+You can get progress via block or delegate. Example:
 
     op.progressCallback = ^(float progress) {
         NSLog(@"Progress: %f", progress);
@@ -45,13 +44,13 @@ WROperation.
 Each WROperation has priority property. There are three types of priority: 
 WROperationPriorityDefault, WROperationPriorityBackground, WROperationPriorityExclusive.
 
-If you start an operation with Exclusive priority all task (except Exclusive) will be suspend.
-Suspended task will continued work after all exclusive tasks is finished.
+If you start an operation with Exclusive priority all task (except Exclusive) will be suspended. 
+Suspended tasks will continue work after all exclusive tasks is finished.
 
 
 JSON encoding and decoding.
 --------------------------
-And if you want have the fastest way for creating class which will be decoded from JSON then use NSObject_WRJSON category for generating Objective-C class from JSON object. Example:
+And if you want have the fastest way for creating class which will be decoded from JSON use NSObject_WRJSON category for generating Objective-C class from JSON object. Example:
 
     NSURL *url = [NSURL URLWithString:@"https://api.github.com/events"];
     NSURLRequest *req = [NSURLRequest requestWithURL:url];
