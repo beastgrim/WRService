@@ -99,6 +99,22 @@
 }
 
 
+- (void) example {
+    NSURL *url = [NSURL URLWithString:@"http://speedtest.ftp.otenet.gr/files/test100Mb.db"];
+    
+    WROperation *op = [[WROperation alloc] initWithUrl:url];
+    op.progressCallback = ^(float progress) {
+        NSLog(@"Progress: %f", progress);
+    };
+    
+    [[WRService shared] execute:op onSuccess:^(WROperation * _Nonnull op, NSData * _Nonnull data) {
+        NSLog(@"Backgound task is READY! %@", op);
+    } onFail:^(WROperation * _Nonnull op, NSError * _Nonnull error) {
+        NSLog(@"Fail error: %@", error);
+    }];
+}
+
+
 #pragma mark - WRProgressProtocol
 
 - (void)operation:(WROperation *)op didChangeProgress:(float)progress {

@@ -13,6 +13,7 @@
 #import "WRObjectOperation.h"
 #import "Article.h"
 #import "GitHubEvent.h"
+#import "NSObject_WRJSON.h"
 
 
 @interface HttpViewController () <WROperationDelegate>
@@ -26,7 +27,7 @@
 
 //    NSURL *url = [NSURL URLWithString:@"https://storage.googleapis.com"];
 
-    [self testGithubEventRequest];
+    [self generateClassExample];
 }
 
 
@@ -43,14 +44,18 @@
 
 - (void) testObjectOperation {
     NSURL *url = [NSURL URLWithString:@"http://ip.jsontest.com"];
-
     NSURLRequest *req = [NSURLRequest requestWithURL:url];
+    
     WRObjectOperation * objOp = [[WRObjectOperation alloc] initWithRequest:req resultClass:[Article class]];
     objOp.progressCallback = ^(float progress) {
         NSLog(@"Progress: %f", progress);
     };
-    NSLog(@"Operation: %@", objOp);
-    [[WRService shared] execute:objOp withDelegate:self];
+    
+    [[WRService shared] execute:objOp onSuccess:^(WROperation * _Nonnull op, Article * _Nonnull result) {
+        NSLog(@"Article: %@", result);
+    } onFail:^(WROperation * _Nonnull op, NSError * _Nonnull error) {
+        NSLog(@"Error: %@", error);
+    }];
 }
 
 - (void) testGithubEventRequest {
@@ -63,6 +68,21 @@
     [[WRService shared] execute:op withDelegate:self];
 }
 
+- (void) generateClassExample {
+    NSURL *url = [NSURL URLWithString:@"https://api.github.com/events"];
+    NSURLRequest *req = [NSURLRequest requestWithURL:url];
+    
+    WRObjectOperation *op = [[WRObjectOperation alloc] initWithRequest:req];
+    
+    [[WRService shared] execute:op onSuccess:^(WROperation * _Nonnull op, NSData*  _Nonnull result) {
+        
+        id json = [NSJSONSerialization JSONObjectWithData:result options:0 error:nil];
+        if (json) {
+            NSString *classInterface = [NSObject wrGenerateClass:@"GitHubEvent" fromJSON:json];
+            NSLog(@"%@", classInterface);
+        }
+    } onFail:nil];
+}
 
 #pragma mark - WROperationDelegate
 
