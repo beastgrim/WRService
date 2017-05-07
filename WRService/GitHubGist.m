@@ -10,22 +10,25 @@
 #import "NSObject_WRJSON.h"
 
 
-
-@implementation Files
+@implementation GitHubGist
 
 - (instancetype)initFromJSONObject:(id)jsonObject {
     
     if (self = [super init]) {
-        [self wrPlainDecodeFromJSON:jsonObject];
+        [self wrDecodeFromJSON:jsonObject options:nil];
     }
+//    NSString *json = [self wrEncodeToJSONObject];
     return self;
+}
+
+- (NSString *)description {
+    return [self wrJSONDescription];
 }
 
 @end
 
 
-
-@implementation GitHubGist
+@implementation File
 
 - (instancetype)initFromJSONObject:(id)jsonObject {
     
@@ -38,6 +41,18 @@
 - (NSString *)description {
     return [self wrJSONDescription];
 }
-
 @end
 
+
+
+@implementation Owner
+
+- (instancetype)initFromJSONObject:(id)jsonObject {
+    
+    if (self = [super init]) {
+        [self wrPlainDecodeFromJSON:jsonObject];
+    }
+    return self;
+}
+
+@end

@@ -10,6 +10,11 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+extern NSString * const WRDateFormatKey;
+extern NSString * const WRDictOfClassKey;
+extern NSString * const WRClassNameKey;
+extern NSString * const WRClassPropertyNameForDictKey;
+
 @interface NSObject (WRJSON)
 
 - (NSString *) wrJSONDescription;
@@ -18,9 +23,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void) wrPlainDecodeFromJSON:(NSDictionary*)json;
 - (void) wrPlainDecodeFromJSON:(NSDictionary*)json dateFormat:(NSString*)dateFormat;
+- (void) wrDecodeFromJSON:(NSDictionary*)json options:(NSDictionary*_Nullable)options;
 
-+ (NSString *) wrGenerateClass:(NSString*)className fromJSON:(id)jsonObject renamedProperties:(NSDictionary*_Nullable*_Nullable)propMap;
-+ (NSString *) wrGenerateClass:(NSString*)className fromJSON:(id)jsonObject renamedProperties:(NSDictionary*_Nullable*_Nullable)propMap dateFormat:(NSString*)dateFormat;
++ (NSString *) wrGenerateClass:(NSString*)className fromJSON:(id)jsonObject renamedProperties:(NSDictionary *_Nullable*_Nullable)propMap;
++ (NSString *) wrGenerateClass:(NSString*)className fromJSON:(id)jsonObject renamedProperties:(NSDictionary *_Nullable*_Nullable)propMap options:(NSDictionary*)options;
 
 @end
 

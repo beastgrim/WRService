@@ -28,7 +28,7 @@
 
 //    NSURL *url = [NSURL URLWithString:@"https://storage.googleapis.com"];
 
-    [self generateClassExample];
+//    [self generateClassExample];
     [self testGithubGistRequest];
 }
 
@@ -92,8 +92,9 @@
         
         id json = [NSJSONSerialization JSONObjectWithData:result options:0 error:nil];
         if (json) {
+            NSDictionary *options = @{WRDictOfClassKey: @{@"files": @{WRClassNameKey:@"File", WRClassPropertyNameForDictKey: @"filename"}}};
             NSDictionary *map;
-            NSString *classInterface = [NSObject wrGenerateClass:@"GitHubGist" fromJSON:json renamedProperties:&map];
+            NSString *classInterface = [NSObject wrGenerateClass:@"GitHubGist" fromJSON:json renamedProperties:&map options:options];
             NSLog(@"%@", classInterface);
             
             NSData *jsonData = [NSJSONSerialization dataWithJSONObject:map options:NSJSONWritingPrettyPrinted error:nil];
