@@ -1,0 +1,12 @@
+{
+    "map" : {
+        "desc" : "description",
+        "Our_Pick_On_Spal_V_Pro_Vercelli_" : "Our Pick On Spal V Pro Vercelli\n"
+    },
+    "dictOfClass" : {
+        "files" : {
+            "className" : "File"
+        }
+    }
+
+}

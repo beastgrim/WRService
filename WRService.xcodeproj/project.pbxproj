@@ -24,6 +24,8 @@
 		908978AD1EBCCF74002D20A8 /* WRXMLOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 908978AC1EBCCF74002D20A8 /* WRXMLOperation.m */; };
 		979B00411EBDCCD300F94E24 /* NSObject_WRJSON.m in Sources */ = {isa = PBXBuildFile; fileRef = 979B00401EBDCCD300F94E24 /* NSObject_WRJSON.m */; };
 		979B00451EBE01AC00F94E24 /* GitHubEvent.m in Sources */ = {isa = PBXBuildFile; fileRef = 979B00441EBE01AC00F94E24 /* GitHubEvent.m */; };
+		D73CFABA1EBF29CA007B20C9 /* GitHubGist.m in Sources */ = {isa = PBXBuildFile; fileRef = D73CFAB91EBF29CA007B20C9 /* GitHubGist.m */; };
+		D73CFABC1EBF3E5D007B20C9 /* GitHubGist.map in Resources */ = {isa = PBXBuildFile; fileRef = D73CFABB1EBF3C0F007B20C9 /* GitHubGist.map */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -72,6 +74,9 @@
 		979B00401EBDCCD300F94E24 /* NSObject_WRJSON.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSObject_WRJSON.m; sourceTree = "<group>"; };
 		979B00431EBE01AC00F94E24 /* GitHubEvent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GitHubEvent.h; sourceTree = "<group>"; };
 		979B00441EBE01AC00F94E24 /* GitHubEvent.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GitHubEvent.m; sourceTree = "<group>"; };
+		D73CFAB81EBF29CA007B20C9 /* GitHubGist.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GitHubGist.h; sourceTree = "<group>"; };
+		D73CFAB91EBF29CA007B20C9 /* GitHubGist.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GitHubGist.m; sourceTree = "<group>"; };
+		D73CFABB1EBF3C0F007B20C9 /* GitHubGist.map */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = "sourcecode.module-map"; path = GitHubGist.map; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -116,18 +121,15 @@
 			children = (
 				9089789F1EBCBCBD002D20A8 /* HttpViewController.h */,
 				908978A01EBCBCBD002D20A8 /* HttpViewController.m */,
-				9089786C1EBB4CB8002D20A8 /* AppDelegate.h */,
-				9089786D1EBB4CB8002D20A8 /* AppDelegate.m */,
 				9089786F1EBB4CB8002D20A8 /* ViewController.h */,
 				908978701EBB4CB8002D20A8 /* ViewController.m */,
 				908978A51EBCC111002D20A8 /* Article.h */,
 				908978A61EBCC111002D20A8 /* Article.m */,
 				979B00431EBE01AC00F94E24 /* GitHubEvent.h */,
 				979B00441EBE01AC00F94E24 /* GitHubEvent.m */,
-				908978721EBB4CB8002D20A8 /* Main.storyboard */,
-				908978751EBB4CB8002D20A8 /* Assets.xcassets */,
-				908978771EBB4CB8002D20A8 /* LaunchScreen.storyboard */,
-				9089787A1EBB4CB8002D20A8 /* Info.plist */,
+				D73CFAB81EBF29CA007B20C9 /* GitHubGist.h */,
+				D73CFAB91EBF29CA007B20C9 /* GitHubGist.m */,
+				D73CFABB1EBF3C0F007B20C9 /* GitHubGist.map */,
 				908978691EBB4CB8002D20A8 /* Supporting Files */,
 			);
 			path = WRService;
@@ -136,6 +138,12 @@
 		908978691EBB4CB8002D20A8 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				9089786C1EBB4CB8002D20A8 /* AppDelegate.h */,
+				9089786D1EBB4CB8002D20A8 /* AppDelegate.m */,
+				908978721EBB4CB8002D20A8 /* Main.storyboard */,
+				908978751EBB4CB8002D20A8 /* Assets.xcassets */,
+				908978771EBB4CB8002D20A8 /* LaunchScreen.storyboard */,
+				9089787A1EBB4CB8002D20A8 /* Info.plist */,
 				9089786A1EBB4CB8002D20A8 /* main.m */,
 			);
 			name = "Supporting Files";
@@ -264,6 +272,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D73CFABC1EBF3E5D007B20C9 /* GitHubGist.map in Resources */,
 				908978791EBB4CB8002D20A8 /* LaunchScreen.storyboard in Resources */,
 				908978761EBB4CB8002D20A8 /* Assets.xcassets in Resources */,
 				908978741EBB4CB8002D20A8 /* Main.storyboard in Resources */,
@@ -287,6 +296,7 @@
 				908978A71EBCC111002D20A8 /* Article.m in Sources */,
 				908978AD1EBCCF74002D20A8 /* WRXMLOperation.m in Sources */,
 				9089789A1EBC95D4002D20A8 /* WRQueue.m in Sources */,
+				D73CFABA1EBF29CA007B20C9 /* GitHubGist.m in Sources */,
 				979B00451EBE01AC00F94E24 /* GitHubEvent.m in Sources */,
 				908978AA1EBCCBC2002D20A8 /* WRJSONOperation.m in Sources */,
 				908978711EBB4CB8002D20A8 /* ViewController.m in Sources */,

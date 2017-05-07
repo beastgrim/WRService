@@ -28,7 +28,8 @@ typedef NS_ENUM(NSInteger, WRPropertyType) {
     WRPropertyTypeChar,
     WRPropertyTypeUChar,
     WRPropertyTypeCharPointer,
-    WRPropertyTypeVoidPointer
+    WRPropertyTypeVoidPointer,
+    WRPropertyTypeId
 };
 
 
@@ -38,8 +39,7 @@ typedef NS_ENUM(NSInteger, WRPropertyType) {
 #pragma mark - Public
 
 - (NSString *)wrJSONDescription {
-    NSString *description = [self description];
-    return [NSString stringWithFormat:@"%@: %@", description, [self wrEncodeToJSONObject]];
+    return [NSString stringWithFormat:@"<%@>: %@", NSStringFromClass([self class]), [self wrEncodeToJSONObject]];
 }
 
 - (NSDictionary *)wrEncodeToJSONObject {
@@ -52,6 +52,9 @@ typedef NS_ENUM(NSInteger, WRPropertyType) {
     NSDateFormatter *df = [NSDateFormatter new];
     df.dateFormat = dateFormat;
     
+    NSDictionary *map = [self mapOfClass];
+    BOOL useMappedProperties = map != nil;
+    
     NSMutableDictionary *result = [NSMutableDictionary new];
     /* A class for converting JSON to Foundation objects and converting Foundation objects to JSON.
      
@@ -61,8 +64,13 @@ typedef NS_ENUM(NSInteger, WRPropertyType) {
      - All dictionary keys are NSStrings
      - NSNumbers are not NaN or infinity
      */
-    for (NSString *name in names) {
-        id ivar = [self valueForKey:name];
+    for (NSString *propName in names) {
+        id ivar = [self valueForKey:propName];
+        NSString *name = propName;
+        NSString *replacedName = map[name];
+        if (useMappedProperties && replacedName) {
+            name = replacedName;
+        }
         
         if (ivar == Nil) {
             ivar = [NSNull null];
@@ -100,14 +108,26 @@ typedef NS_ENUM(NSInteger, WRPropertyType) {
     return result;
 }
 
+- (void)wrPlainDecodeFromJSON:(NSDictionary *)json {
+    [self wrPlainDecodeFromJSON:json dateFormat:DATE_FORMAT];
+}
+
 - (void)wrPlainDecodeFromJSON:(NSDictionary *)json dateFormat:(NSString *)dateFormat {
     
     NSArray *names = [self allPropertyNames];
     NSDateFormatter *df = [NSDateFormatter new];
     df.dateFormat = dateFormat;
     
+    NSDictionary *map = [self mapOfClass];
+    BOOL useMappedProperties = map != nil;
+    
     for (NSString *name in names) {
-        id val = json[name];
+        NSString *jsonName = name;
+        NSString *replacedName = map[name];
+        if (useMappedProperties && replacedName) {
+            jsonName = replacedName;
+        }
+        id val = json[jsonName];
         
         NSString *typeName = nil;
         WRPropertyType type = [self propertyType:name typeName:&typeName];
@@ -120,7 +140,8 @@ typedef NS_ENUM(NSInteger, WRPropertyType) {
                 break;
                 
             case WRPropertyTypeNull:
-            case WRPropertyTypeObject: {
+            case WRPropertyTypeObject:
+            case WRPropertyTypeId: {
                 
                 Class class = NSClassFromString(typeName);
                 
@@ -179,7 +200,16 @@ typedef NS_ENUM(NSInteger, WRPropertyType) {
     }
 }
 
-+ (NSString *)wrGenerateClass:(NSString *)className fromJSON:(id)jsonObject {
++ (NSString *)wrGenerateClass:(NSString *)className fromJSON:(nonnull id)jsonObject renamedProperties:(NSDictionary *__autoreleasing  _Nullable * _Nullable)propMap {
+    return [NSObject wrGenerateClass:className fromJSON:jsonObject renamedProperties:propMap dateFormat:DATE_FORMAT];
+}
+
++ (NSString *)wrGenerateClass:(NSString *)className fromJSON:(id)jsonObject renamedProperties:(NSDictionary *__autoreleasing  _Nullable * _Nullable)propMap dateFormat:(nonnull NSString *)dateFormat {
+    NSDictionary *map = @{@"description":@"desc"};
+    return [NSObject wrGenerateClass:className fromJSON:jsonObject dateFormat:dateFormat mappedProperties:map renamedProperties:propMap];
+}
+
++ (NSString *)wrGenerateClass:(NSString *)className fromJSON:(id)jsonObject dateFormat:(nonnull NSString *)dateFormat mappedProperties:(NSDictionary*)map renamedProperties:(NSDictionary *__autoreleasing  _Nullable * _Nullable)propMap {
     
     NSDictionary *json = nil;
     
@@ -193,23 +223,59 @@ typedef NS_ENUM(NSInteger, WRPropertyType) {
     }
     
     if (json == nil) return @"";
+    NSLog(@"[WRService]: Generating class from JSON:\n%@\n\n", json);
+
+    NSDateFormatter *df = [NSDateFormatter new];
+    df.dateFormat = dateFormat;
 
     NSMutableDictionary <NSString*,NSString*> *otherClasses = [NSMutableDictionary new];
     NSMutableDictionary *arrayProperties = [NSMutableDictionary new];
+    NSMutableDictionary <NSString*,NSString*> *changedProps = [NSMutableDictionary new];
 
     
     NSMutableString *properties = [NSMutableString new];
     
     [json enumerateKeysAndObjectsUsingBlock:^(NSString*  _Nonnull key, id  _Nonnull obj, BOOL * _Nonnull stop) {
         
+        NSString *replacedPropName = [map valueForKey:[key lowercaseString]];
+        if (replacedPropName) {
+            [changedProps setValue:key forKey:replacedPropName];
+            key = replacedPropName;
+        }
+        
         if ([obj isKindOfClass:[NSDictionary class]]) {
             
             NSString *className = [key capitalizedString];
             NSString *propName = [key lowercaseString];
-            NSString *classInterface = [NSObject wrGenerateClass:className fromJSON:obj];
-
+            
+            if (![self _isValidClassName:className]) {
+                NSString *validClassName = [self _validClassNameFromString:className];
+                [changedProps setValue:className forKey:validClassName];
+                className = validClassName;
+            }
+            
+            NSDictionary *subChanges = nil;
+            NSString *classInterface = [NSObject wrGenerateClass:className fromJSON:obj renamedProperties:&subChanges];
+            if (subChanges) {
+                [changedProps addEntriesFromDictionary:subChanges];
+            }
             [otherClasses setObject:classInterface forKey:className];
             [properties appendFormat:@"@property (nonatomic, strong) %@ *%@;\n", className, propName];
+            
+//            if ([self _isValidClassName:className]) {
+//                NSDictionary *subChanges = nil;
+//                NSString *classInterface = [NSObject wrGenerateClass:className fromJSON:obj renamedProperties:&subChanges];
+//                if (subChanges) {
+//                    [changedProps addEntriesFromDictionary:subChanges];
+//                }
+//                [otherClasses setObject:classInterface forKey:className];
+//                [properties appendFormat:@"@property (nonatomic, strong) %@ *%@;\n", className, propName];
+//            } else {
+//                NSString *validClassName = [self _validClassNameFromString:className];
+//                [changedProps setValue:className forKey:validClassName];
+//                [properties appendFormat:@"@property (nonatomic, strong) NSDictionary *%@;\n", validClassName];
+//            }
+
         
         } else if ([obj isKindOfClass:[NSArray class]]) {
             
@@ -235,7 +301,12 @@ typedef NS_ENUM(NSInteger, WRPropertyType) {
                     [properties appendFormat:@"@property (nonatomic, copy) id %@;\n", key];
                 } break;
                 case WRPropertyTypeObject: {
-                    [properties appendFormat:@"@property (nonatomic, copy) NSString *%@;\n", key];
+                    BOOL isDate = [obj isKindOfClass:[NSString class]] && [df dateFromString:obj];
+                    if (isDate) {
+                        [properties appendFormat:@"@property (nonatomic, copy) NSDate *%@;\n", key];
+                    } else {
+                        [properties appendFormat:@"@property (nonatomic, copy) NSString *%@;\n", key];
+                    }
                 } break;
                     
                 case WRPropertyTypeBool: {
@@ -276,7 +347,7 @@ typedef NS_ENUM(NSInteger, WRPropertyType) {
         [result appendFormat:@"@class %@;", additionalClassNames];
     }
 
-    [result appendFormat:@"\n\n\n@interface %@ : NSObject\n\n", className];
+    [result appendFormat:@"\n\n\n@interface %@ : NSObject <WRObjectOperationProtocol>\n\n", className];
     [result appendFormat:@"%@", properties];
     [result appendFormat:@"\n\n@end\n"];
     
@@ -284,11 +355,39 @@ typedef NS_ENUM(NSInteger, WRPropertyType) {
         [result appendFormat:@"%@", interface];
     }];
     
+    // Create implementation
+    [result appendFormat:@"\n\n\n\n@implementation %@\n\n\
+- (instancetype)initFromJSONObject:(id)jsonObject {\n\n\
+    if (self = [super init]) {\n\
+        [self wrPlainDecodeFromJSON:jsonObject];\n\
+    }\n\
+    return self;\n\
+}\n\n@end", className ];
+    
+    
+    if (changedProps.count && propMap) {
+        *propMap = changedProps;
+    }
+    
     return result;
 }
 
 
 #pragma mark - Helpers
+
+- (NSDictionary * __nullable) mapOfClass {
+    NSString *mapPath = [[NSBundle mainBundle] pathForResource:NSStringFromClass([self class]) ofType:@"map"];
+    NSDictionary *map = nil;
+    if (mapPath) {
+        NSData *jsonData = [NSData dataWithContentsOfFile:mapPath];
+        NSDictionary *json = [NSJSONSerialization JSONObjectWithData:jsonData options:NSJSONReadingAllowFragments error:nil];
+        if (json && [json isKindOfClass:[NSDictionary class]]) {
+            map = json[@"map"];
+            return map;
+        }
+    }
+    return nil;
+}
 
 - (NSArray *)allPropertyNames {
     
@@ -320,7 +419,7 @@ typedef NS_ENUM(NSInteger, WRPropertyType) {
     NSMutableArray *result = [NSMutableArray new];
     
     for (NSString *name in properties) {
-        if ([self _isProertySupportDecode:name]) {
+        if ([self _isPropertySupportDecode:name]) {
             [result addObject:name];
         }
     }
@@ -328,16 +427,17 @@ typedef NS_ENUM(NSInteger, WRPropertyType) {
     return result;
 }
 
-- (BOOL) _isProertySupportDecode:(NSString*)name {
+- (BOOL) _isPropertySupportDecode:(NSString*)name {
 
     WRPropertyType type = [self propertyType:name typeName:nil];
     
     switch (type) {
+        case WRPropertyTypeObject:
+        case WRPropertyTypeId:
         case WRPropertyTypeInt:
         case WRPropertyTypeUInt:
         case WRPropertyTypeFloat:
         case WRPropertyTypeShort:
-        case WRPropertyTypeObject:
         case WRPropertyTypeUShort:
         case WRPropertyTypeInteger:
         case WRPropertyTypeUInteger:
@@ -352,6 +452,18 @@ typedef NS_ENUM(NSInteger, WRPropertyType) {
     }
 }
 
++ (BOOL) _isValidClassName:(NSString*)className {
+    static NSCharacterSet *set; if (!set) set = [[NSCharacterSet alphanumericCharacterSet] invertedSet];
+    NSRange range = [className rangeOfCharacterFromSet:set];
+    
+    return range.location == NSNotFound;
+}
+
++ (NSString*) _validClassNameFromString:(NSString*)inName {
+    static NSCharacterSet *set; if (!set) set = [[NSCharacterSet alphanumericCharacterSet] invertedSet];
+    NSString *result = [[inName componentsSeparatedByCharactersInSet:set] componentsJoinedByString:@"_"];
+    return result;
+}
 
 - (WRPropertyType) propertyType:(NSString*)name typeName:(NSString**)typeName {
     
@@ -404,6 +516,8 @@ typedef NS_ENUM(NSInteger, WRPropertyType) {
                 return WRPropertyTypeCharPointer;
             } else if ([type isEqualToString:@"^v"]) {
                 return WRPropertyTypeVoidPointer;
+            } else if ([type isEqualToString:@"@"]) {
+                return WRPropertyTypeId;
             } else {
                 NSLog(@"ERROR: unimplemeted primitive type to decode!");
                 return WRPropertyTypeUnknown;

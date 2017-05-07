@@ -55,8 +55,8 @@
 }
 
 - (NSString *)description {
-    NSString *description = [super description];
-    return [NSString stringWithFormat:@"%@: %@", description, [self wrJSONDescription]];
+    NSString *description = [self wrJSONDescription];
+    return description;
 }
 
 @end

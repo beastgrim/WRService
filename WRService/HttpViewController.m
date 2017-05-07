@@ -13,6 +13,7 @@
 #import "WRObjectOperation.h"
 #import "Article.h"
 #import "GitHubEvent.h"
+#import "GitHubGist.h"
 #import "NSObject_WRJSON.h"
 
 
@@ -28,6 +29,7 @@
 //    NSURL *url = [NSURL URLWithString:@"https://storage.googleapis.com"];
 
     [self generateClassExample];
+    [self testGithubGistRequest];
 }
 
 
@@ -68,8 +70,20 @@
     [[WRService shared] execute:op withDelegate:self];
 }
 
+- (void) testGithubGistRequest {
+    
+    NSURL *url = [NSURL URLWithString:@"https://api.github.com/gists/public"];
+    NSURLRequest *req = [NSURLRequest requestWithURL:url];
+    
+    WRObjectOperation *op = [[WRObjectOperation alloc] initWithRequest:req resultClass:[GitHubGist class]];
+    
+    [[WRService shared] execute:op onSuccess:^(WROperation * _Nonnull op, NSArray <GitHubGist*>*  _Nonnull result) {
+        NSLog(@"%@", result.firstObject);
+    } onFail:nil];
+}
+
 - (void) generateClassExample {
-    NSURL *url = [NSURL URLWithString:@"https://api.github.com/events"];
+    NSURL *url = [NSURL URLWithString:@"https://api.github.com/gists/public"];
     NSURLRequest *req = [NSURLRequest requestWithURL:url];
     
     WRObjectOperation *op = [[WRObjectOperation alloc] initWithRequest:req];
@@ -78,8 +92,13 @@
         
         id json = [NSJSONSerialization JSONObjectWithData:result options:0 error:nil];
         if (json) {
-            NSString *classInterface = [NSObject wrGenerateClass:@"GitHubEvent" fromJSON:json];
+            NSDictionary *map;
+            NSString *classInterface = [NSObject wrGenerateClass:@"GitHubGist" fromJSON:json renamedProperties:&map];
             NSLog(@"%@", classInterface);
+            
+            NSData *jsonData = [NSJSONSerialization dataWithJSONObject:map options:NSJSONWritingPrettyPrinted error:nil];
+            NSString *json = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+            NSLog(@"MAP: %@", json);
         }
     } onFail:nil];
 }

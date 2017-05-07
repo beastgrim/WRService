@@ -15,9 +15,12 @@ NS_ASSUME_NONNULL_BEGIN
 - (NSString *) wrJSONDescription;
 - (NSDictionary *) wrEncodeToJSONObject;
 - (NSDictionary *) wrEncodeToJSONObjectWithDateFormat:(NSString *)dateFormat;
+
+- (void) wrPlainDecodeFromJSON:(NSDictionary*)json;
 - (void) wrPlainDecodeFromJSON:(NSDictionary*)json dateFormat:(NSString*)dateFormat;
 
-+ (NSString *) wrGenerateClass:(NSString*)className fromJSON:(id)jsonObject;
++ (NSString *) wrGenerateClass:(NSString*)className fromJSON:(id)jsonObject renamedProperties:(NSDictionary*_Nullable*_Nullable)propMap;
++ (NSString *) wrGenerateClass:(NSString*)className fromJSON:(id)jsonObject renamedProperties:(NSDictionary*_Nullable*_Nullable)propMap dateFormat:(NSString*)dateFormat;
 
 @end
 
