@@ -126,10 +126,11 @@
         startNewTask = YES;
 
         
-        [[WRService shared] cancelTasksWithDelegate:self];
+//        [[WRService shared] cancelTasksWithDelegate:self];
 //        [self startExclusiveTask];
     }
 }
+
 
 #pragma mark - WROperationDelegate
 
@@ -140,5 +141,6 @@
 - (void)operation:(WROperation *)op didFailWithError:(NSError *)error {
     NSLog(@"didFailWithError: %@", error);
 }
+
 
 @end

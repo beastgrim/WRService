@@ -178,7 +178,9 @@ NSErrorDomain const WRQueueErrorDomain = @"WRQueueErrorDomain";
 - (void)URLSession:(NSURLSession *)session dataTask:(NSURLSessionDataTask *)dataTask
     didReceiveData:(NSData *)data {
     WROperation *op = [self operationOfTask:dataTask];
-    [op didReceiveData:data];
+    dispatch_async(_queue, ^{
+        [op didReceiveData:data];
+    });
 }
 
 - (void)URLSession:(NSURLSession *)session dataTask:(NSURLSessionDataTask *)dataTask didReceiveResponse:(NSURLResponse *)response completionHandler:(void (^)(NSURLSessionResponseDisposition))completionHandler
@@ -187,7 +189,9 @@ NSErrorDomain const WRQueueErrorDomain = @"WRQueueErrorDomain";
     
     long long size = [response expectedContentLength];
     WROperation *op = [self operationOfTask:dataTask];
-    [op setContentLength:size];
+    dispatch_async(_queue, ^{
+        [op setContentLength:size];
+    });
 }
 
 @end

@@ -1,15 +1,13 @@
 //
-//  HttpViewController.m
+//  TestViewController.m
 //  WRService
 //
-//  Created by FLS on 05/05/2017.
+//  Created by Евгений Богомолов on 09/05/2017.
 //  Copyright © 2017 WR. All rights reserved.
 //
 
-#import "HttpViewController.h"
+#import "TestViewController.h"
 #import "WRService.h"
-#import "WRJSONOperation.h"
-#import "WRXMLOperation.h"
 #import "WRObjectOperation.h"
 #import "Article.h"
 #import "GitHubEvent.h"
@@ -17,18 +15,18 @@
 #import "NSObject_WRJSON.h"
 
 
-@interface HttpViewController () <WROperationDelegate>
+@interface TestViewController () <WROperationDelegate>
 
 @end
 
-@implementation HttpViewController
+@implementation TestViewController
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-
-//    NSURL *url = [NSURL URLWithString:@"https://storage.googleapis.com"];
-
-//    [self generateClassExample];
+    
+    //    NSURL *url = [NSURL URLWithString:@"https://storage.googleapis.com"];
+    
+    //    [self generateClassExample];
     [self testGithubGistRequest];
 }
 
@@ -37,7 +35,7 @@
     NSURL *url = [NSURL URLWithString:@"http://ip.jsontest.com"];
     
     Article *a = [Article testAtricle];
-
+    
     WRObjectOperation * objOp = [[WRObjectOperation alloc] initWithUrl:url requestJSONBody:a method:@"POST"];
     
     
@@ -109,11 +107,11 @@
 - (void)operation:(WROperation *)op didFinishWithResult:(NSArray<GitHubEvent*>*)result {
     NSLog(@"didFinishWithResult: %@", [result debugDescription]);
     
-//    GitHubEvent *e = result.firstObject;
+    //    GitHubEvent *e = result.firstObject;
     
-//    for (GitHubEvent *e in result) {
-//        NSLog(@"Date: %@ - class: %@", e.created_at, NSStringFromClass([e.created_at class]));
-//    }
+    //    for (GitHubEvent *e in result) {
+    //        NSLog(@"Date: %@ - class: %@", e.created_at, NSStringFromClass([e.created_at class]));
+    //    }
 }
 
 @end

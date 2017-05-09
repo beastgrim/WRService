@@ -17,11 +17,10 @@
 		908978911EBB4D16002D20A8 /* WRService.m in Sources */ = {isa = PBXBuildFile; fileRef = 908978901EBB4D16002D20A8 /* WRService.m */; };
 		908978941EBB4DFF002D20A8 /* WROperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 908978931EBB4DFF002D20A8 /* WROperation.m */; };
 		9089789A1EBC95D4002D20A8 /* WRQueue.m in Sources */ = {isa = PBXBuildFile; fileRef = 908978991EBC95D4002D20A8 /* WRQueue.m */; };
-		908978A11EBCBCBD002D20A8 /* HttpViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 908978A01EBCBCBD002D20A8 /* HttpViewController.m */; };
 		908978A41EBCBEF4002D20A8 /* WRObjectOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 908978A31EBCBEF4002D20A8 /* WRObjectOperation.m */; };
 		908978A71EBCC111002D20A8 /* Article.m in Sources */ = {isa = PBXBuildFile; fileRef = 908978A61EBCC111002D20A8 /* Article.m */; };
-		908978AA1EBCCBC2002D20A8 /* WRJSONOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 908978A91EBCCBC2002D20A8 /* WRJSONOperation.m */; };
-		908978AD1EBCCF74002D20A8 /* WRXMLOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 908978AC1EBCCF74002D20A8 /* WRXMLOperation.m */; };
+		977A4EA01EC0E63000C79256 /* SwiftViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 977A4E9F1EC0E63000C79256 /* SwiftViewController.swift */; };
+		977A4EA31EC1D68100C79256 /* TestViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 977A4EA21EC1D68100C79256 /* TestViewController.m */; };
 		979B00411EBDCCD300F94E24 /* NSObject_WRJSON.m in Sources */ = {isa = PBXBuildFile; fileRef = 979B00401EBDCCD300F94E24 /* NSObject_WRJSON.m */; };
 		979B00451EBE01AC00F94E24 /* GitHubEvent.m in Sources */ = {isa = PBXBuildFile; fileRef = 979B00441EBE01AC00F94E24 /* GitHubEvent.m */; };
 		D73CFABA1EBF29CA007B20C9 /* GitHubGist.m in Sources */ = {isa = PBXBuildFile; fileRef = D73CFAB91EBF29CA007B20C9 /* GitHubGist.m */; };
@@ -60,16 +59,14 @@
 		908978971EBB82BF002D20A8 /* WROperation_Private.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WROperation_Private.h; sourceTree = "<group>"; };
 		908978981EBC95D4002D20A8 /* WRQueue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WRQueue.h; sourceTree = "<group>"; };
 		908978991EBC95D4002D20A8 /* WRQueue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WRQueue.m; sourceTree = "<group>"; };
-		9089789F1EBCBCBD002D20A8 /* HttpViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpViewController.h; sourceTree = "<group>"; };
-		908978A01EBCBCBD002D20A8 /* HttpViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HttpViewController.m; sourceTree = "<group>"; };
 		908978A21EBCBEF4002D20A8 /* WRObjectOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WRObjectOperation.h; sourceTree = "<group>"; };
 		908978A31EBCBEF4002D20A8 /* WRObjectOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WRObjectOperation.m; sourceTree = "<group>"; };
 		908978A51EBCC111002D20A8 /* Article.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Article.h; sourceTree = "<group>"; };
 		908978A61EBCC111002D20A8 /* Article.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Article.m; sourceTree = "<group>"; };
-		908978A81EBCCBC2002D20A8 /* WRJSONOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WRJSONOperation.h; sourceTree = "<group>"; };
-		908978A91EBCCBC2002D20A8 /* WRJSONOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WRJSONOperation.m; sourceTree = "<group>"; };
-		908978AB1EBCCF74002D20A8 /* WRXMLOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WRXMLOperation.h; sourceTree = "<group>"; };
-		908978AC1EBCCF74002D20A8 /* WRXMLOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WRXMLOperation.m; sourceTree = "<group>"; };
+		977A4E9E1EC0E62F00C79256 /* WRService-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "WRService-Bridging-Header.h"; sourceTree = "<group>"; };
+		977A4E9F1EC0E63000C79256 /* SwiftViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwiftViewController.swift; sourceTree = "<group>"; };
+		977A4EA11EC1D68100C79256 /* TestViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestViewController.h; sourceTree = "<group>"; };
+		977A4EA21EC1D68100C79256 /* TestViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TestViewController.m; sourceTree = "<group>"; };
 		979B003F1EBDCCD300F94E24 /* NSObject_WRJSON.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSObject_WRJSON.h; sourceTree = "<group>"; };
 		979B00401EBDCCD300F94E24 /* NSObject_WRJSON.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSObject_WRJSON.m; sourceTree = "<group>"; };
 		979B00431EBE01AC00F94E24 /* GitHubEvent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GitHubEvent.h; sourceTree = "<group>"; };
@@ -119,8 +116,9 @@
 		908978681EBB4CB8002D20A8 /* WRService */ = {
 			isa = PBXGroup;
 			children = (
-				9089789F1EBCBCBD002D20A8 /* HttpViewController.h */,
-				908978A01EBCBCBD002D20A8 /* HttpViewController.m */,
+				977A4E9F1EC0E63000C79256 /* SwiftViewController.swift */,
+				977A4EA11EC1D68100C79256 /* TestViewController.h */,
+				977A4EA21EC1D68100C79256 /* TestViewController.m */,
 				9089786F1EBB4CB8002D20A8 /* ViewController.h */,
 				908978701EBB4CB8002D20A8 /* ViewController.m */,
 				908978A51EBCC111002D20A8 /* Article.h */,
@@ -131,6 +129,7 @@
 				D73CFAB91EBF29CA007B20C9 /* GitHubGist.m */,
 				D73CFABB1EBF3C0F007B20C9 /* GitHubGist.map */,
 				908978691EBB4CB8002D20A8 /* Supporting Files */,
+				977A4E9E1EC0E62F00C79256 /* WRService-Bridging-Header.h */,
 			);
 			path = WRService;
 			sourceTree = "<group>";
@@ -173,20 +172,8 @@
 				979B003F1EBDCCD300F94E24 /* NSObject_WRJSON.h */,
 				979B00401EBDCCD300F94E24 /* NSObject_WRJSON.m */,
 				908978951EBB68E7002D20A8 /* WRProgressProtocol.h */,
-				979B00421EBDEA0200F94E24 /* trash */,
 			);
 			path = Source;
-			sourceTree = "<group>";
-		};
-		979B00421EBDEA0200F94E24 /* trash */ = {
-			isa = PBXGroup;
-			children = (
-				908978A81EBCCBC2002D20A8 /* WRJSONOperation.h */,
-				908978A91EBCCBC2002D20A8 /* WRJSONOperation.m */,
-				908978AB1EBCCF74002D20A8 /* WRXMLOperation.h */,
-				908978AC1EBCCF74002D20A8 /* WRXMLOperation.m */,
-			);
-			name = trash;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -238,6 +225,7 @@
 				TargetAttributes = {
 					908978651EBB4CB8002D20A8 = {
 						CreatedOnToolsVersion = 8.3;
+						LastSwiftMigration = 0830;
 						ProvisioningStyle = Automatic;
 					};
 					9089787E1EBB4CB8002D20A8 = {
@@ -294,18 +282,17 @@
 			buildActionMask = 2147483647;
 			files = (
 				908978A71EBCC111002D20A8 /* Article.m in Sources */,
-				908978AD1EBCCF74002D20A8 /* WRXMLOperation.m in Sources */,
 				9089789A1EBC95D4002D20A8 /* WRQueue.m in Sources */,
+				977A4EA01EC0E63000C79256 /* SwiftViewController.swift in Sources */,
 				D73CFABA1EBF29CA007B20C9 /* GitHubGist.m in Sources */,
 				979B00451EBE01AC00F94E24 /* GitHubEvent.m in Sources */,
-				908978AA1EBCCBC2002D20A8 /* WRJSONOperation.m in Sources */,
 				908978711EBB4CB8002D20A8 /* ViewController.m in Sources */,
 				908978A41EBCBEF4002D20A8 /* WRObjectOperation.m in Sources */,
 				908978911EBB4D16002D20A8 /* WRService.m in Sources */,
 				9089786E1EBB4CB8002D20A8 /* AppDelegate.m in Sources */,
 				908978941EBB4DFF002D20A8 /* WROperation.m in Sources */,
 				9089786B1EBB4CB8002D20A8 /* main.m in Sources */,
-				908978A11EBCBCBD002D20A8 /* HttpViewController.m in Sources */,
+				977A4EA31EC1D68100C79256 /* TestViewController.m in Sources */,
 				979B00411EBDCCD300F94E24 /* NSObject_WRJSON.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -444,12 +431,16 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
 				DEVELOPMENT_TEAM = "";
 				INFOPLIST_FILE = WRService/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = WR.WRService;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "WRService/WRService-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 3.0;
 			};
 			name = Debug;
 		};
@@ -457,18 +448,22 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
 				DEVELOPMENT_TEAM = "";
 				INFOPLIST_FILE = WRService/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = WR.WRService;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "WRService/WRService-Bridging-Header.h";
+				SWIFT_VERSION = 3.0;
 			};
 			name = Release;
 		};
 		9089788C1EBB4CB8002D20A8 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				DEVELOPMENT_TEAM = 27FQ4THS6C;
 				INFOPLIST_FILE = WRServiceTests/Info.plist;
@@ -482,6 +477,7 @@
 		9089788D1EBB4CB8002D20A8 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				DEVELOPMENT_TEAM = 27FQ4THS6C;
 				INFOPLIST_FILE = WRServiceTests/Info.plist;

@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="12118" systemVersion="16B2555" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="NkB-yy-5ow">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="12120" systemVersion="16E195" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="NkB-yy-5ow">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="12086"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="12088"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -49,10 +49,29 @@
             </objects>
             <point key="canvasLocation" x="585" y="313"/>
         </scene>
+        <!--Item-->
+        <scene sceneID="SBM-ux-cX7">
+            <objects>
+                <viewController id="snT-nD-kVr" customClass="SwiftViewController" customModule="WRService" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="cSd-6p-AhR"/>
+                        <viewControllerLayoutGuide type="bottom" id="GhP-n7-T22"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="7Bi-xv-UU8">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    </view>
+                    <tabBarItem key="tabBarItem" title="Item" id="ogz-Py-vF6"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="V73-Vc-JfZ" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1372" y="-65"/>
+        </scene>
         <!--Item 1-->
         <scene sceneID="spW-51-0We">
             <objects>
-                <viewController id="zlT-uN-L0b" customClass="HttpViewController" sceneMemberID="viewController">
+                <viewController id="zlT-uN-L0b" customClass="TestViewController" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="bvt-hg-j9n"/>
                         <viewControllerLayoutGuide type="bottom" id="MWd-Ng-5xJ"/>
@@ -80,6 +99,7 @@
                     <connections>
                         <segue destination="zlT-uN-L0b" kind="relationship" relationship="viewControllers" id="TZN-G1-SPT"/>
                         <segue destination="BYZ-38-t0r" kind="relationship" relationship="viewControllers" id="y4W-9F-Ozf"/>
+                        <segue destination="snT-nD-kVr" kind="relationship" relationship="viewControllers" id="mRJ-Mn-kIH"/>
                     </connections>
                 </tabBarController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="VRJ-Rd-ujB" userLabel="First Responder" sceneMemberID="firstResponder"/>

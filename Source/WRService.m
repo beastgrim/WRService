@@ -16,6 +16,7 @@
 
 @end
 
+
 @implementation WRService {
     WRQueue * _backgroundQueue;
     WRQueue * _defaultQueue;
@@ -40,17 +41,6 @@
         
         _queue = dispatch_queue_create("wr_service_queue", nil);
         
-        /*
-        _highQueue = [NSOperationQueue new];
-        _highQueue.name = @"High";
-        _highQueue.maxConcurrentOperationCount = 3;
-        _highQueue.qualityOfService = NSQualityOfServiceUserInteractive;
-        _defaultQueue = [NSOperationQueue new];
-        _defaultQueue.name = @"Default";
-        _defaultQueue.maxConcurrentOperationCount = 10;
-        _defaultQueue.qualityOfService = NSQualityOfServiceBackground;
-        */
-        
         NSURLSessionConfiguration *conf = [NSURLSessionConfiguration defaultSessionConfiguration];
         _defaultQueue = [[WRQueue alloc] initWithConfiguration:conf queue:_queue];
         _defaultQueue.defaultTaskPriority = 0.6;
@@ -63,6 +53,15 @@
 
 
 #pragma mark - Public
+
++ (void)execute:(WROperation *)op onSuccess:(WRSuccessCallback)success onFail:(WRFailCallback)fail {
+    [[self shared] execute:op onSuccess:success onFail:fail];
+}
+
++ (void)execute:(WROperation *)op withDelegate:(id<WROperationDelegate>)delegate {
+    [[self shared] execute:op withDelegate:delegate];
+}
+
 
 - (void)execute:(WROperation *)op onSuccess:(WRSuccessCallback)success onFail:(WRFailCallback)fail {
     
