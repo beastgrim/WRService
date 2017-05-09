@@ -9,6 +9,7 @@
 #import <Foundation/Foundation.h>
 #import "WROperation.h"
 #import "WRObjectOperation.h"
+#import "WRProgressProtocol.h"
 
 
 NS_ASSUME_NONNULL_BEGIN

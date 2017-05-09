@@ -1,3 +1,24 @@
+#
+# Be sure to run `pod lib lint WRService.podspec' to ensure this is a
+# valid spec before submitting.
+#
+# Any lines starting with a # are optional, but their use is encouraged
+# To learn more about a Podspec see http://guides.cocoapods.org/syntax/podspec.html
+#
+
+Pod::Spec.new do |s|
+  s.name             = 'WRService'
+  s.version          = '0.1.0'
+  s.summary          = 'WRService is light and convinient tool for working with an API via NSURLSession for most of applications.'
+
+# This description is used to generate tags and improve search results.
+#   * Think: What does it do? Why did you write it? What is the focus?
+#   * Try to keep it short, snappy and to the point.
+#   * Write the description between the DESC delimiters below.
+#   * Finally, don't worry about the indent, CocoaPods strips it!
+
+  s.description      = <<-DESC
+
 # WRService
 
 WRService is light and convinient tool for working with an API via NSURLSession  for most of applications.
@@ -110,36 +131,24 @@ And if you want have the fastest way for creating class which will be decoded fr
 @property (nonatomic, copy) NSString *head;\
 @end
 
+                       DESC
 
+  s.homepage         = 'https://github.com/beastgrim/WRService'
+  # s.screenshots     = 'www.example.com/screenshots_1', 'www.example.com/screenshots_2'
+  s.license          = { :type => 'MIT', :file => 'LICENSE' }
+  s.author           = { 'beastgrim' => 'beastgrim@gmail.com' }
+  s.source           = { :git => 'https://github.com/beastgrim/WRService.git', :tag => s.version.to_s }
+  # s.social_media_url = 'https://twitter.com/<TWITTER_USERNAME>'
 
+  s.ios.deployment_target = '8.0'
 
+  s.source_files = 'WRService/Classes/**/*'
+  
+  # s.resource_bundles = {
+  #   'WRService' => ['WRService/Assets/*.png']
+  # }
 
-# Cocoapods support
-
-[![CI Status](http://img.shields.io/travis/beastgrim/WRService.svg?style=flat)](https://travis-ci.org/beastgrim/WRService)
-[![Version](https://img.shields.io/cocoapods/v/WRService.svg?style=flat)](http://cocoapods.org/pods/WRService)
-[![License](https://img.shields.io/cocoapods/l/WRService.svg?style=flat)](http://cocoapods.org/pods/WRService)
-[![Platform](https://img.shields.io/cocoapods/p/WRService.svg?style=flat)](http://cocoapods.org/pods/WRService)
-
-## Example
-
-To run the example project, clone the repo, and run `pod install` from the Example directory first.
-
-## Requirements
-
-## Installation
-
-WRService is available through [CocoaPods](http://cocoapods.org). To install
-it, simply add the following line to your Podfile:
-
-```ruby
-pod "WRService"
-```
-
-## Author
-
-beastgrim, beastgrim@gmail.com
-
-## License
-
-WRService is available under the MIT license. See the LICENSE file for more info.
+  # s.public_header_files = 'Pod/Classes/**/*.h'
+  # s.frameworks = 'UIKit', 'MapKit'
+  # s.dependency 'AFNetworking', '~> 2.3'
+end
