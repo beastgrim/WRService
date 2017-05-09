@@ -1,0 +1,11 @@
+{
+    "WRDictOfClassKey" : {
+        "files" : {
+            "WRClassPropertyNameForDictKey" : "filename",
+            "WRClassNameKey" : "File"
+        }
+    },
+    "WRPropertyNamesMapKey" : {
+        "desc" : "description"
+    }
+}

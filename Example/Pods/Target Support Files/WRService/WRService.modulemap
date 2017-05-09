@@ -1,0 +1,6 @@
+framework module WRService {
+  umbrella header "WRService-umbrella.h"
+
+  export *
+  module * { export * }
+}

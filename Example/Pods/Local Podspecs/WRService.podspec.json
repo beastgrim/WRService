@@ -1,0 +1,22 @@
+{
+  "name": "WRService",
+  "version": "0.1.0",
+  "summary": "A short description of WRService.",
+  "description": "TODO: Add long description of the pod here.",
+  "homepage": "https://github.com/beastgrim/WRService",
+  "license": {
+    "type": "MIT",
+    "file": "LICENSE"
+  },
+  "authors": {
+    "beastgrim": "beastgrim@gmail.com"
+  },
+  "source": {
+    "git": "https://github.com/beastgrim/WRService.git",
+    "tag": "0.1.0"
+  },
+  "platforms": {
+    "ios": "8.0"
+  },
+  "source_files": "WRService/Classes/**/*"
+}
