@@ -1,0 +1,16 @@
+PODS:
+  - WRService (0.1.0)
+
+DEPENDENCIES:
+  - WRService (from `../`)
+
+EXTERNAL SOURCES:
+  WRService:
+    :path: ../
+
+SPEC CHECKSUMS:
+  WRService: d1e57621d0f774b3f6ae541209165f01cca26a99
+
+PODFILE CHECKSUM: ece91d2da5b0958d3a13fa7ca6744f4a33e7151b
+
+COCOAPODS: 1.2.1

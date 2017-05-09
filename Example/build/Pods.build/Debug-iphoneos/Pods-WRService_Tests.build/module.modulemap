@@ -1,0 +1,6 @@
+framework module Pods_WRService_Tests {
+  umbrella header "Pods-WRService_Tests-umbrella.h"
+
+  export *
+  module * { export * }
+}

@@ -1,0 +1,11 @@
+use_frameworks!
+
+target 'WRService_Example' do
+  pod 'WRService', :path => '../'
+
+  target 'WRService_Tests' do
+    inherit! :search_paths
+
+    
+  end
+end
