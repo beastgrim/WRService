@@ -81,7 +81,7 @@ NSErrorDomain const WRQueueErrorDomain = @"WRQueueErrorDomain";
 }
 
 - (void)cancelTasksWithDelegate:(id)delegate {
-    dispatch_async(_queue, ^{
+    dispatch_sync(_queue, ^{
         NSPredicate *predicate = [NSPredicate predicateWithFormat:@"self.cancelDelegate == %@", delegate];
         NSArray *arr = [[_operations allValues] filteredArrayUsingPredicate:predicate];
         for (WROperation *op in arr) {
@@ -187,10 +187,9 @@ NSErrorDomain const WRQueueErrorDomain = @"WRQueueErrorDomain";
 {
     completionHandler(NSURLSessionResponseAllow);
     
-    long long size = [response expectedContentLength];
     WROperation *op = [self operationOfTask:dataTask];
     dispatch_async(_queue, ^{
-        [op setContentLength:size];
+        [op didReceiveResponse:response];
     });
 }
 

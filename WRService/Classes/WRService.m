@@ -41,6 +41,17 @@
         
         _queue = dispatch_queue_create("wr_service_queue", nil);
         
+        /*
+         _highQueue = [NSOperationQueue new];
+         _highQueue.name = @"High";
+         _highQueue.maxConcurrentOperationCount = 3;
+         _highQueue.qualityOfService = NSQualityOfServiceUserInteractive;
+         _defaultQueue = [NSOperationQueue new];
+         _defaultQueue.name = @"Default";
+         _defaultQueue.maxConcurrentOperationCount = 10;
+         _defaultQueue.qualityOfService = NSQualityOfServiceBackground;
+         */
+        
         NSURLSessionConfiguration *conf = [NSURLSessionConfiguration defaultSessionConfiguration];
         _defaultQueue = [[WRQueue alloc] initWithConfiguration:conf queue:_queue];
         _defaultQueue.defaultTaskPriority = 0.6;
@@ -65,6 +76,8 @@
 
 - (void)execute:(WROperation *)op onSuccess:(WRSuccessCallback)success onFail:(WRFailCallback)fail {
     
+    if (op == nil) return;
+    
     op.successCallback = success;
     op.failCallback = fail;
     
@@ -72,6 +85,8 @@
 }
 
 - (void)execute:(WROperation *)op withDelegate:(id<WROperationDelegate>)delegate {
+    
+    if (op == nil) return;
     
     op.delegate = delegate;
     
@@ -120,7 +135,7 @@
 
 - (BOOL)countExclusiveTasks {
     NSInteger count = [_defaultQueue countExclusiveTasks];
-
+    
     return count;
 }
 
@@ -135,7 +150,7 @@
         NSLog(@"Exclusive task KVO");
         [object removeObserver:self forKeyPath:@"finished" context:(__bridge void * _Nullable)(self)];
         _countExclusiveTasks--;
-
+        
         if (_countExclusiveTasks == 0) {
             [self resumeAllTasks];
         }
