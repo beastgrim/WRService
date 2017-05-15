@@ -205,4 +205,9 @@ typedef NS_OPTIONS(NSUInteger, WRDelegateOption) {
     [self _calculateProgress];
 }
 
+- (void)didReceiveChallenge:(NSURLAuthenticationChallenge *)challenge completionHandler:(void (^)(NSURLSessionAuthChallengeDisposition, NSURLCredential * _Nullable))completionHandler {
+    
+    completionHandler(NSURLSessionAuthChallengePerformDefaultHandling, nil);
+}
+
 @end

@@ -10,8 +10,10 @@
 #import "WRQueue.h"
 #import "WROperation_Private.h"
 
-@interface WRService()
+@interface WRService() <WRQueueDelegate>
 
+
+@property (nonatomic, copy) void (^authChallangeCallback)(WROperationPriority, NSURLAuthenticationChallenge * _Nonnull, void (^ _Nonnull)(NSURLSessionAuthChallengeDisposition, NSURLCredential * _Nullable));
 
 
 @end
@@ -55,9 +57,11 @@
         NSURLSessionConfiguration *conf = [NSURLSessionConfiguration defaultSessionConfiguration];
         _defaultQueue = [[WRQueue alloc] initWithConfiguration:conf queue:_queue];
         _defaultQueue.defaultTaskPriority = 0.6;
+        _defaultQueue.delegate = self;
         conf.networkServiceType = NSURLNetworkServiceTypeBackground;
         _backgroundQueue = [[WRQueue alloc] initWithConfiguration:conf queue:_queue];
         _backgroundQueue.defaultTaskPriority = 0.3;
+        _backgroundQueue.delegate = self;
     }
     return self;
 }
@@ -102,6 +106,11 @@
     
 }
 
+- (void)setAuthChallengeCallback:(void (^)(WROperationPriority, NSURLAuthenticationChallenge * _Nonnull, void (^ _Nonnull)(NSURLSessionAuthChallengeDisposition, NSURLCredential * _Nullable)))callback
+{
+    self.authChallangeCallback = callback;
+}
+
 
 #pragma mark - Private
 
@@ -125,7 +134,9 @@
                 [_backgroundQueue suspendAllTasks];
             }
             
-            _countExclusiveTasks++;
+            @synchronized (self) {
+                _countExclusiveTasks++;
+            }
             [_defaultQueue execute:op];
             
             [op addObserver:self forKeyPath:@"finished" options:NSKeyValueObservingOptionNew context:(__bridge void * _Nullable)(self)];
@@ -149,13 +160,27 @@
     if (context == (__bridge void * _Nullable)(self)) {
         NSLog(@"Exclusive task KVO");
         [object removeObserver:self forKeyPath:@"finished" context:(__bridge void * _Nullable)(self)];
-        _countExclusiveTasks--;
+        
+        @synchronized (self) {
+            _countExclusiveTasks--;
+        }
         
         if (_countExclusiveTasks == 0) {
             [self resumeAllTasks];
         }
     } else {
         [super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
+    }
+}
+
+
+#pragma mark - WRQueue Delegate
+
+- (void)queue:(WRQueue *)queue didReceiveChallenge:(NSURLAuthenticationChallenge *)challenge completionHandler:(void (^)(NSURLSessionAuthChallengeDisposition, NSURLCredential * _Nullable))completionHandler
+{
+    if (self.authChallangeCallback) {
+        WROperationPriority priority = queue == _defaultQueue ? WROperationPriorityDefault : WROperationPriorityBackground;
+        self.authChallangeCallback(priority, challenge, completionHandler);
     }
 }
 

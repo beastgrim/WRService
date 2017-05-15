@@ -18,6 +18,7 @@
 - (void)didReceiveData:(NSData *_Nonnull)data;
 - (void)didCompleteWithError:(nullable NSError *)error;
 - (void)didReceiveResponse:(NSURLResponse*_Nonnull)response;
+- (void)didReceiveChallenge:(NSURLAuthenticationChallenge *_Nonnull)challenge completionHandler:(void (^_Nonnull)(NSURLSessionAuthChallengeDisposition, NSURLCredential * _Nullable))completionHandler;
 
 @end
 
@@ -28,6 +29,7 @@
 - (void)didReceiveData:(NSData *_Nonnull)data;
 - (void)didCompleteWithError:(nullable NSError *)error;
 - (void)didReceiveResponse:(NSURLResponse*_Nonnull)response;
+- (void)didReceiveChallenge:(NSURLAuthenticationChallenge *_Nonnull)challenge completionHandler:(void (^_Nonnull)(NSURLSessionAuthChallengeDisposition, NSURLCredential * _Nullable))completionHandler;
 
 @end
 

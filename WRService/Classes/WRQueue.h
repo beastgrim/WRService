@@ -17,8 +17,14 @@ typedef NS_ENUM(NSUInteger, WRQueueError) {
     WRQueueErrorTaskAlreadyPerforming
 };
 
+@protocol WRQueueDelegate;
+
+
 @interface WRQueue : NSObject
 
+@property (nonatomic, weak) id<WRQueueDelegate> delegate;
+
+@property (nonatomic, readonly) NSURLSession *session;
 @property (nonatomic, assign, readonly) NSInteger countExclusiveTasks;
 @property (nonatomic, assign) float defaultTaskPriority;
 
@@ -29,6 +35,15 @@ typedef NS_ENUM(NSUInteger, WRQueueError) {
 
 - (void) suspendAllTasks;
 - (void) resumeAllTasks;
+
+@end
+
+
+@protocol WRQueueDelegate <NSObject>
+
+@optional
+- (void) queue:(WRQueue *)queue didReceiveChallenge:(NSURLAuthenticationChallenge *)challenge
+completionHandler:(void (^)(NSURLSessionAuthChallengeDisposition disposition, NSURLCredential * _Nullable credential))completionHandler;
 
 @end
 
