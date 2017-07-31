@@ -14,19 +14,22 @@
 
 @required
 
+- (void)setSessionTask:(NSURLSessionTask*_Nonnull)task;
 - (void)didReceiveData:(NSData *_Nonnull)data;
 - (void)didCompleteWithError:(nullable NSError *)error;
-- (void)setSessionTask:(NSURLSessionTask*_Nonnull)task;
-- (void)setContentLength:(long long)length;
+- (void)didReceiveResponse:(NSURLResponse*_Nonnull)response;
+- (void)didReceiveChallenge:(NSURLAuthenticationChallenge *_Nonnull)challenge completionHandler:(void (^_Nonnull)(NSURLSessionAuthChallengeDisposition, NSURLCredential * _Nullable))completionHandler;
 
 @end
 
 @interface WROperation(Private)
 
+
+- (void)setSessionTask:(NSURLSessionTask*_Nonnull)task;
 - (void)didReceiveData:(NSData *_Nonnull)data;
 - (void)didCompleteWithError:(nullable NSError *)error;
-- (void)setSessionTask:(NSURLSessionTask*_Nonnull)task;
-- (void)setContentLength:(long long)length;
+- (void)didReceiveResponse:(NSURLResponse*_Nonnull)response;
+- (void)didReceiveChallenge:(NSURLAuthenticationChallenge *_Nonnull)challenge completionHandler:(void (^_Nonnull)(NSURLSessionAuthChallengeDisposition, NSURLCredential * _Nullable))completionHandler;
 
 @end
 

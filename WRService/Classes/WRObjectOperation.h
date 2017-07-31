@@ -16,8 +16,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @optional
 
-- (instancetype) initFromXMLData:(NSData*)xmlData;
-- (instancetype) initFromJSONData:(NSData*)jsonData;
+- (instancetype __nullable) initFromXMLData:(NSData*)xmlData;
+- (instancetype __nullable) initFromJSONData:(NSData*)jsonData;
 
 /**
  @brief Create your class instance from raw data.
@@ -25,7 +25,7 @@ NS_ASSUME_NONNULL_BEGIN
  @return Class instance.
  */
 
-- (instancetype) initFromJSONObject:(id)jsonObject;
+- (instancetype __nullable) initFromJSONObject:(id)jsonObject;
 
 @end
 

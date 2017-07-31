@@ -30,6 +30,11 @@ typedef NS_ENUM(NSInteger, WROperationPriority) {
 @property (nonatomic, readonly) NSURL * __nullable url;
 @property (nonatomic, readonly) NSURLRequest *request;
 
+@property (nonatomic, readonly) NSURLResponse *response;
+@property (nonatomic, readonly) NSHTTPURLResponse *HTTPResponse;
+@property (nonatomic, readonly) NSData *responseData;
+
+
 @property (nonatomic, assign, readonly) NSUInteger taskIdentifier;
 @property (nonatomic, assign) WROperationPriority priority;
 
@@ -48,6 +53,7 @@ typedef NS_ENUM(NSInteger, WROperationPriority) {
 
 // KVO properties
 @property (readonly, getter=isFinished) BOOL finished;
+@property (readonly, getter=isCanceled) BOOL canceled;
 @property (readonly, assign) float progress;
 
 

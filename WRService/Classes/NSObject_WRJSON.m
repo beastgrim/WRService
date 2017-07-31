@@ -230,14 +230,14 @@ typedef NS_ENUM(NSInteger, WRPropertyType) {
                         
                     } else if ([val isKindOfClass:[NSDictionary class]]) {
                         NSString *className = typeName;
-                        Class class = NSClassFromString(className);
+                        Class subClass = NSClassFromString(className);
                         
-                        if ([class isSubclassOfClass:[NSDictionary class]]) {
+                        if ([subClass isSubclassOfClass:[NSDictionary class]]) {
                             [self setValue:val forKey:name];
 
                         } else { // Custom class
                             
-                            id classInstanse = [[class alloc] init];
+                            id classInstanse = [[subClass alloc] init];
                             [classInstanse wrDecodeFromJSON:val options:nil];
                             [self setValue:classInstanse forKey:name];
                         }
@@ -352,41 +352,41 @@ typedef NS_ENUM(NSInteger, WRPropertyType) {
         
         if ([obj isKindOfClass:[NSDictionary class]]) {
             
-            NSString *className = [key capitalizedString];
+            NSString *subClassName = [key capitalizedString];
             NSString *propName = [key lowercaseString];
             
             NSDictionary *dictOptions = dictOfClasses[key];
             if (dictOptions) {
                 NSLog(@"Options: %@", dictOptions);
                 NSString *newClassName = dictOptions[WRClassNameKey];
-                if (newClassName) className = newClassName;
+                if (newClassName) subClassName = newClassName;
                 
                 NSDictionary *classJson = [[obj allValues] firstObject];
                 if (classJson && [classJson isKindOfClass:[NSDictionary class]]) {
                     obj = classJson;
                 }
                 NSDictionary *subChanges = nil;
-                NSString *classInterface = [NSObject wrGenerateClass:className fromJSON:obj renamedProperties:&subChanges];
+                NSString *classInterface = [NSObject wrGenerateClass:subClassName fromJSON:obj renamedProperties:&subChanges];
                 if (subChanges) {
                     [changedProps addEntriesFromDictionary:subChanges];
                 }
-                [otherClasses setObject:classInterface forKey:className];
-                [properties appendFormat:@"@property (nonatomic, strong) NSDictionary <NSString*,%@*> *%@;\n", className, propName];
+                [otherClasses setObject:classInterface forKey:subClassName];
+                [properties appendFormat:@"@property (nonatomic, strong) NSDictionary <NSString*,%@*> *%@;\n", subClassName, propName];
                 
             } else {
-                if (![self _isValidClassName:className]) {
-                    NSString *validClassName = [self _validClassNameFromString:className];
-                    [changedProps setValue:className forKey:validClassName];
-                    className = validClassName;
+                if (![self _isValidClassName:subClassName]) {
+                    NSString *validClassName = [self _validClassNameFromString:subClassName];
+                    [changedProps setValue:subClassName forKey:validClassName];
+                    subClassName = validClassName;
                 }
                 
                 NSDictionary *subChanges = nil;
-                NSString *classInterface = [NSObject wrGenerateClass:className fromJSON:obj renamedProperties:&subChanges];
+                NSString *classInterface = [NSObject wrGenerateClass:subClassName fromJSON:obj renamedProperties:&subChanges];
                 if (subChanges) {
                     [changedProps addEntriesFromDictionary:subChanges];
                 }
-                [otherClasses setObject:classInterface forKey:className];
-                [properties appendFormat:@"@property (nonatomic, strong) %@ *%@;\n", className, propName];
+                [otherClasses setObject:classInterface forKey:subClassName];
+                [properties appendFormat:@"@property (nonatomic, strong) %@ *%@;\n", subClassName, propName];
             }
         
         } else if ([obj isKindOfClass:[NSArray class]]) {
@@ -581,7 +581,7 @@ typedef NS_ENUM(NSInteger, WRPropertyType) {
     return result;
 }
 
-- (WRPropertyType) propertyType:(NSString*)name typeName:(NSString**)typeName {
+- (WRPropertyType) propertyType:(NSString*)name typeName:(NSString*__autoreleasing*)typeName {
     
     objc_property_t theProperty = class_getProperty([self class], name.UTF8String);
     const char * propertyAttrs = property_getAttributes(theProperty);

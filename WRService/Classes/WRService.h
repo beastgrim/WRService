@@ -25,9 +25,11 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void) execute:(WROperation*)op onSuccess:(WRSuccessCallback)success onFail:(WRFailCallback __nullable)fail;
 - (void) execute:(WROperation*)op withDelegate:(id<WROperationDelegate>)delegate;
+
 - (void) cancelTasksWithDelegate:(id)delegate;
 - (void) cancelAllTasks;
 
+- (void) setAuthChallengeCallback:(void(^)(WROperationPriority queuePriority, NSURLAuthenticationChallenge *challenge, void (^completionHandler)(NSURLSessionAuthChallengeDisposition disposition, NSURLCredential * _Nullable credential)))callback;
 
 @end
 

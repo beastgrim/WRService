@@ -17,7 +17,6 @@ NSErrorDomain const WRQueueErrorDomain = @"WRQueueErrorDomain";
 @end
 
 @implementation WRQueue {
-    NSURLSession *_session;
     dispatch_queue_t _queue;
     NSMutableDictionary <NSNumber*, WROperation*> * _operations;
 }
@@ -66,6 +65,7 @@ NSErrorDomain const WRQueueErrorDomain = @"WRQueueErrorDomain";
 }
 
 - (void)execute:(WROperation *)op {
+    
     if (op.taskIdentifier > 0) {
         NSError *err = [NSError errorWithDomain:WRQueueErrorDomain code:WRQueueErrorTaskAlreadyPerforming userInfo:nil];
         NSLog(@"ERROR execute operation: %@", err);
@@ -81,7 +81,7 @@ NSErrorDomain const WRQueueErrorDomain = @"WRQueueErrorDomain";
 }
 
 - (void)cancelTasksWithDelegate:(id)delegate {
-    dispatch_async(_queue, ^{
+    dispatch_sync(_queue, ^{
         NSPredicate *predicate = [NSPredicate predicateWithFormat:@"self.cancelDelegate == %@", delegate];
         NSArray *arr = [[_operations allValues] filteredArrayUsingPredicate:predicate];
         for (WROperation *op in arr) {
@@ -153,8 +153,11 @@ NSErrorDomain const WRQueueErrorDomain = @"WRQueueErrorDomain";
 - (void)URLSession:(NSURLSession *)session didReceiveChallenge:(NSURLAuthenticationChallenge *)challenge
  completionHandler:(void (^)(NSURLSessionAuthChallengeDisposition disposition, NSURLCredential * _Nullable credential))completionHandler {
     
-    completionHandler(NSURLSessionAuthChallengePerformDefaultHandling, nil);
-    NSLog(@"didReceiveChallenge: %@", challenge);
+    if ([_delegate respondsToSelector:@selector(queue:didReceiveChallenge:completionHandler:)]) {
+        [_delegate queue:self didReceiveChallenge:challenge completionHandler:completionHandler];
+    } else {
+        completionHandler(NSURLSessionAuthChallengePerformDefaultHandling, nil);
+    }
 }
 
 - (void)URLSessionDidFinishEventsForBackgroundURLSession:(NSURLSession *)session {
@@ -172,6 +175,14 @@ NSErrorDomain const WRQueueErrorDomain = @"WRQueueErrorDomain";
     [self _unregisterTask:op];
 }
 
+- (void)URLSession:(NSURLSession *)session task:(NSURLSessionTask *)task didReceiveChallenge:(NSURLAuthenticationChallenge *)challenge completionHandler:(void (^)(NSURLSessionAuthChallengeDisposition, NSURLCredential * _Nullable))completionHandler
+{
+    WROperation *op = [self operationOfTask:task];
+    dispatch_async(_queue, ^{
+        [op didReceiveChallenge:challenge completionHandler:completionHandler];
+    });
+}
+
 
 #pragma mark - NSURLSessionDataDelegate
 
@@ -187,10 +198,9 @@ NSErrorDomain const WRQueueErrorDomain = @"WRQueueErrorDomain";
 {
     completionHandler(NSURLSessionResponseAllow);
     
-    long long size = [response expectedContentLength];
     WROperation *op = [self operationOfTask:dataTask];
     dispatch_async(_queue, ^{
-        [op setContentLength:size];
+        [op didReceiveResponse:response];
     });
 }
 

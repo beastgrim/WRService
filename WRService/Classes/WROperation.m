@@ -19,6 +19,7 @@ typedef NS_OPTIONS(NSUInteger, WRDelegateOption) {
 @interface WROperation() <WROperationPrivate>
 
 @property (readwrite, getter=isFinished) BOOL finished;
+@property (readwrite, getter=isCanceled) BOOL canceled;
 @property (readwrite, assign) float progress;
 
 @end
@@ -37,12 +38,12 @@ typedef NS_OPTIONS(NSUInteger, WRDelegateOption) {
 - (instancetype)initWithUrl:(NSURL *)url
 {
     if (url == nil) return nil;
-
+    
     self = [self init];
     if (self) {
         _url = url;
         _request = [NSURLRequest requestWithURL:url];
-     }
+    }
     return self;
 }
 
@@ -73,6 +74,7 @@ typedef NS_OPTIONS(NSUInteger, WRDelegateOption) {
     self.delegate = nil;
     self.progressDelegate = nil;
     self.progressCallback = nil;
+    self.canceled = YES;
     [_task cancel];
 }
 
@@ -81,37 +83,35 @@ typedef NS_OPTIONS(NSUInteger, WRDelegateOption) {
     return result;
 }
 
+
 #pragma mark - Private
 
 - (void) _calculateProgress {
-    float progress = (float)_data.length/_expectedContentLength;
+    float progress = (float)_data.length/(float)_expectedContentLength;
+    if (progress > 1.0 || progress < 0.0) {
+        return;
+    }
+    
     self.progress = progress;
     
-    if (_progressCallback) {
-        dispatch_async(dispatch_get_main_queue(), ^{
+    dispatch_async(dispatch_get_main_queue(), ^{
+        if (_progressCallback) {
             _progressCallback(progress);
-        });
-    } else if (_useProgress) {
-        dispatch_async(dispatch_get_main_queue(), ^{
+        } else if (_useProgress) {
             [_progressDelegate operation:self didChangeProgress:progress];
-        });
-    }
+        }
+    });
 }
 
 
 #pragma mark - Getters
 
-//- (NSURLRequest *)request {
-//    if ([self conformsToProtocol:@protocol(WRHttpRequestProtocol)]) {
-//        id <WRHttpRequestProtocol> obj = self;
-//        NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:_url cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:obj.timeoutInterval];
-//        return request;
-//    }
-//    return [NSURLRequest requestWithURL:_url];
-//}
-
 - (NSUInteger)taskIdentifier {
     return _taskIdentifier;
+}
+
+- (NSData *)responseData {
+    return _data;
 }
 
 
@@ -147,8 +147,13 @@ typedef NS_OPTIONS(NSUInteger, WRDelegateOption) {
     }
 }
 
-- (void)setContentLength:(long long)length {
-    _expectedContentLength = length;
+- (void)didReceiveResponse:(NSURLResponse*)response {
+    long long size = [response expectedContentLength];
+    _expectedContentLength = size;
+    _response = response;
+    if ([response isKindOfClass:[NSHTTPURLResponse class]]) {
+        _HTTPResponse = (NSHTTPURLResponse*)response;
+    }
 }
 
 - (void)setSessionTask:(NSURLSessionTask *)task {
@@ -166,16 +171,14 @@ typedef NS_OPTIONS(NSUInteger, WRDelegateOption) {
     self.finished = YES;
     
     if (error) {
-        if (_failCallback) {
-            dispatch_async(dispatch_get_main_queue(), ^{
+        dispatch_async(dispatch_get_main_queue(), ^{
+            if (_failCallback) {
                 _failCallback(self, error);
-            });
-        } else
-        if (_delegateSettings & WRDelegateOptionError) {
-            dispatch_async(dispatch_get_main_queue(), ^{
+            } else  if (_delegateSettings & WRDelegateOptionError) {
                 [_delegate operation:self didFailWithError:error];
-            });
-        }
+            }
+        });
+        
     } else {
         id result = [self processResult:_data];
         
@@ -184,26 +187,27 @@ typedef NS_OPTIONS(NSUInteger, WRDelegateOption) {
             [exeption raise];
         }
         
-        if ([result isKindOfClass:[NSError class]]) {
-            [self didCompleteWithError:result];
-            
-        } if (_successCallback) {
-            
-            dispatch_async(dispatch_get_main_queue(), ^{
+        dispatch_async(dispatch_get_main_queue(), ^{
+            if ([result isKindOfClass:[NSError class]]) {
+                [self didCompleteWithError:result];
+            }
+            if (_successCallback) {
                 _successCallback(self, result);
-            });
-        } else if (_delegateSettings & WRDelegateOptionSuccess) {
-            
-            dispatch_async(dispatch_get_main_queue(), ^{
+            } else if (_delegateSettings & WRDelegateOptionSuccess) {
                 [_delegate operation:self didFinishWithResult:result];
-            });
-        }
+            }
+        });
     }
 }
 
 - (void)didReceiveData:(NSData *)data {
     [_data appendData:data];
     [self _calculateProgress];
+}
+
+- (void)didReceiveChallenge:(NSURLAuthenticationChallenge *)challenge completionHandler:(void (^)(NSURLSessionAuthChallengeDisposition, NSURLCredential * _Nullable))completionHandler {
+    
+    completionHandler(NSURLSessionAuthChallengePerformDefaultHandling, nil);
 }
 
 @end
