@@ -27,7 +27,23 @@
     //    NSURL *url = [NSURL URLWithString:@"https://storage.googleapis.com"];
     
     //    [self generateClassExample];
-    [self testGithubGistRequest];
+    [self testSimpleRequest];
+}
+
+- (void) testSimpleRequest {
+    
+    
+    NSURL *url = [NSURL URLWithString:@"https://s-cdn.sportbox.ru/images/styles/690_388/fp_fotos/93/dc/604f8e540b134d7039de323586cee932588f80ad7e203618142168.jpg"];
+    NSURLRequest *req = [NSURLRequest requestWithURL:url];
+    
+    WROperation * op = [[WROperation alloc] initWithRequest:req];
+    
+    [[WRService shared] execute:op onSuccess:^(WROperation * _Nonnull op, NSData * _Nonnull data) {
+        NSLog(@"Success: %@, self: %@", data, self);
+        
+    } onFail:^(WROperation * _Nonnull op, NSError * _Nonnull error) {
+        NSLog(@"Fail: %@", error);
+    }];
 }
 
 

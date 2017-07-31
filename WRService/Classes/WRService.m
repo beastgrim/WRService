@@ -181,6 +181,8 @@
     if (self.authChallangeCallback) {
         WROperationPriority priority = queue == _defaultQueue ? WROperationPriorityDefault : WROperationPriorityBackground;
         self.authChallangeCallback(priority, challenge, completionHandler);
+    } else {
+        completionHandler(NSURLSessionAuthChallengePerformDefaultHandling, nil);
     }
 }
 
