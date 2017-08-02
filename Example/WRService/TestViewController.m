@@ -39,7 +39,7 @@
     WROperation * op = [[WROperation alloc] initWithRequest:req];
     
     [[WRService shared] execute:op onSuccess:^(WROperation * _Nonnull op, NSData * _Nonnull data) {
-        NSLog(@"Success: %@, self: %@", data, self);
+        NSLog(@"Success: %lu, self: %@", data.length, self);
         
     } onFail:^(WROperation * _Nonnull op, NSError * _Nonnull error) {
         NSLog(@"Fail: %@", error);

@@ -9,6 +9,12 @@
 #import "Article.h"
 #import "NSObject_WRJSON.h"
 
+@interface Article ()
+
+@property (nonatomic, readwrite) NSInteger identifier;
+
+@end
+
 @implementation Article
 
 
@@ -35,7 +41,7 @@
              @"onPage":@"10",
              @"name":@"Best article",
              @"info":@{@"mail":@"afa.mail.com"},
-             @"date":@"128452352"};
+             @"date":@"2017-08-02T15:08:25Z"};
 }
 
 +(NSURL *)urlForMethod:(NSString *)method {
@@ -79,18 +85,12 @@
     
     if (self = [super init]) {
         
-        NSDictionary *json = [Article testJSON];
-        
-        _identifier = [json[@"identifier"] integerValue];
-        _timeoutInterval = 60;
-        _favorite = [json[@"favorite"] boolValue];
-        _rating = [json[@"rating"] floatValue];
-        _onPage = @([json[@"onPage"] integerValue]);
-        _name = json[@"name"];
-        _info = json[@"info"];
-        _date = [NSDate date];
-        _parentArticle = [Article new];
-        
+        NSError *error = nil;
+        [self wrDecodeFromJSON:jsonObject options:nil error:&error];
+        if (error) {
+            NSLog(@"Error initFromJSONObject: %@", error);
+            return nil;
+        }
     }
     return self;
 }

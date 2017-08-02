@@ -15,7 +15,7 @@
 @property NSTimeInterval timeoutInterval;
 
 
-@property (nonatomic, assign) NSInteger identifier;
+@property (nonatomic, readonly) NSInteger identifier;
 @property (nonatomic, assign) BOOL favorite;
 @property (nonatomic, assign) float rating;
 @property (nonatomic, copy) NSNumber * onPage;

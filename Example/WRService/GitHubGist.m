@@ -15,9 +15,14 @@
 - (instancetype)initFromJSONObject:(id)jsonObject {
     
     if (self = [super init]) {
-        [self wrDecodeFromJSON:jsonObject options:nil];
+        
+        NSError *decodeError = nil;
+        if (![self wrDecodeFromJSON:jsonObject options:nil error:&decodeError]) {
+            NSLog(@"Error decode: %@", decodeError);
+            return nil;
+        }
     }
-//    NSString *json = [self wrEncodeToJSONObject];
+
     return self;
 }
 
