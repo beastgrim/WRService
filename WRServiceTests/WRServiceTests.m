@@ -7,7 +7,7 @@
 //
 
 #import <XCTest/XCTest.h>
-#import "WRXMLOperation.h"
+
 
 @interface WRServiceTests : XCTestCase
 
@@ -37,18 +37,5 @@
     }];
 }
 
-
-- (void)testXMLArray {
-    
-    
-    WRXMLOperation *op = [WRXMLOperation new];
-    
-    NSString *xmlString = @"<object type=\"array\" elementType=\"Product\" length=\"3\" id=\"0\"> <object type=\"Product\" id=\"1\"> <field name=\"name\" type=\"string\" value=\"Baked beans\" /> <field name=\"price\" type=\"double\" value=\"1.75\" /> <field name=\"grams\" type=\"int\" value=\"250\" /> <field name=\"registered\" type=\"boolean\" value=\"true\" /> <field name=\"category\" type=\"char\" value=\"\\u0042\" /> </object> <object type=\"Product\" id=\"2\"> <field name=\"name\" type=\"string\" value=\"Basmati Rice\" /> <field name=\"price\" type=\"double\" value=\"3.89\" /> <field name=\"grams\" type=\"int\" value=\"750\" /> <field name=\"registered\" type=\"boolean\" value=\"true\" /> <field name=\"category\" type=\"char\" value=\"\\u0052\" /> </object> <object type=\"Product\" id=\"3\"> <field name=\"name\" type=\"string\" value=\"White bread\" /> <field name=\"price\" type=\"double\" value=\"1.06\" /> <field name=\"grams\" type=\"int\" value=\"300\" /> <field name=\"registered\" type=\"boolean\" value=\"false\" /> <field name=\"category\" type=\"char\" value=\"\\u0048\" /> </object> </object>";
-    NSData *data = [xmlString dataUsingEncoding:NSUTF8StringEncoding];
-    
-    NSDictionary *result = [op processResult:data];
-    
-    NSLog(@"Test XML dictionary: %@", result);
-}
 
 @end

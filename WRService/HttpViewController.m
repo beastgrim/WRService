@@ -8,8 +8,6 @@
 
 #import "HttpViewController.h"
 #import "WRService.h"
-#import "WRJSONOperation.h"
-#import "WRXMLOperation.h"
 #import "WRObjectOperation.h"
 #import "Article.h"
 #import "GitHubEvent.h"
@@ -78,7 +76,7 @@
         
         id json = [NSJSONSerialization JSONObjectWithData:result options:0 error:nil];
         if (json) {
-            NSString *classInterface = [NSObject wrGenerateClass:@"GitHubEvent" fromJSON:json];
+            NSString *classInterface = [NSObject wrGenerateClass:@"GitHubEvent" fromJSON:json renamedProperties:nil];
             NSLog(@"%@", classInterface);
         }
     } onFail:nil];
