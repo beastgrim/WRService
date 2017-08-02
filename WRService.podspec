@@ -137,7 +137,7 @@ And if you want have the fastest way for creating class which will be decoded fr
   # s.screenshots     = 'www.example.com/screenshots_1', 'www.example.com/screenshots_2'
   s.license          = { :type => 'MIT', :file => 'LICENSE' }
   s.author           = { 'beastgrim' => 'beastgrim@gmail.com' }
-  s.source           = { :git => 'https://github.com/beastgrim/WRService.git',  :branch => "0.1.0", :tag => s.version.to_s }
+  s.source           = { :git => 'https://github.com/beastgrim/WRService.git',  :branch => "0.1.2", :tag => s.version.to_s }
   # s.social_media_url = 'https://twitter.com/<TWITTER_USERNAME>'
 
   s.ios.deployment_target = '8.0'
