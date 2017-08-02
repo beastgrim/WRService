@@ -2,6 +2,8 @@
 
 #ifdef __OBJC__
 
-  
+#import <Foundation/Foundation.h>
+#import "NSObject_WRJSON.h"
+#import "Article.h"
 
 #endif

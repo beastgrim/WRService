@@ -12,6 +12,7 @@
 		4663F5ED6D21FC2958E8521550A4EC15 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6604A7D69453B4569E4E4827FB9155A9 /* Foundation.framework */; };
 		5DA561FE2E4D1BE6A4E66F08709C8EA9 /* Pods-WRService_Example-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C6CC2E790D4E8A74B15E511385FD1A3 /* Pods-WRService_Example-dummy.m */; };
 		8B0A6532697A83BD9670AEE24DA722D6 /* WRService-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = ABCF9A3C427D34EF3894314B4ED4EA50 /* WRService-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		90C0C9411F31FC9200BA5A1E /* NSObject_WRJSON.m in Sources */ = {isa = PBXBuildFile; fileRef = 973E2C731EC20A3B00665551 /* NSObject_WRJSON.m */; };
 		973E2C7E1EC20A3B00665551 /* NSObject_WRJSON.h in Headers */ = {isa = PBXBuildFile; fileRef = 973E2C721EC20A3B00665551 /* NSObject_WRJSON.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		973E2C7F1EC20A3B00665551 /* NSObject_WRJSON.m in Sources */ = {isa = PBXBuildFile; fileRef = 973E2C731EC20A3B00665551 /* NSObject_WRJSON.m */; };
 		973E2C801EC20A3B00665551 /* WRObjectOperation.h in Headers */ = {isa = PBXBuildFile; fileRef = 973E2C741EC20A3B00665551 /* WRObjectOperation.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -398,6 +399,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				90C0C9411F31FC9200BA5A1E /* NSObject_WRJSON.m in Sources */,
 				0F35B82801EA24840327A2E0BB4234BC /* Pods-WRService_Tests-dummy.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
