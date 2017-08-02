@@ -9,13 +9,20 @@
 #import "NSObject_WRJSON.h"
 #import <objc/runtime.h>
 
-#define DATE_FORMAT @"YYYY-MM-dd'T'HH:mm:ss'Z'"
+WRKey WRDefaultDateFormat = @"YYYY-MM-dd'T'HH:mm:ss'Z'";
 
-NSString * const WRDateFormatKey = @"WRDateFormatKey";
-NSString * const WRPropertyNamesMapKey = @"WRPropertyNamesMapKey";
-NSString * const WRDictOfClassKey = @"WRDictOfClassKey";
-NSString * const WRClassNameKey = @"WRClassNameKey";
-NSString * const WRClassPropertyNameForDictKey = @"WRClassPropertyNameForDictKey";
+WRKey WRErrorDomain = @"WRErrorDomain";
+
+WRKey WRDateFormatKey = @"WRDateFormatKey";
+WRKey WRPropertyNamesMapKey = @"WRPropertyNamesMapKey";
+WRKey WRDictOfClassKey = @"WRDictOfClassKey";
+WRKey WRClassNameKey = @"WRClassNameKey";
+WRKey WRClassPropertyNameForDictKey = @"WRClassPropertyNameForDictKey";
+WRKey WRRequiredPropertiesKey = @"WRRequiredPropertiesKey";
+
+WRKey WRJsonClassMapKey = @"WRJsonClassMapKey";
+WRKey WRDateFormatterKey = @"WRDateFormatterKey";
+
 
 typedef NS_ENUM(NSInteger, WRPropertyType) {
     WRPropertyTypeUnknown = 0,
@@ -37,6 +44,13 @@ typedef NS_ENUM(NSInteger, WRPropertyType) {
     WRPropertyTypeId
 };
 
+typedef NS_ENUM(NSInteger, WRError) {
+    WRErrorUndefined = 900,
+    WRErrorRequiredParamIsNil,
+    WRErrorBadPropertyValue,
+    WRErrorClassNonexistent
+};
+
 
 @implementation NSObject (WRJSON)
 
@@ -48,15 +62,25 @@ typedef NS_ENUM(NSInteger, WRPropertyType) {
 }
 
 - (NSDictionary *)wrEncodeToJSONObject {
-    return [self wrEncodeToJSONObjectWithDateFormat:DATE_FORMAT];
+    return [self wrEncodeToJSONObjectWithDateFormat:WRDefaultDateFormat];
 }
 
 - (NSDictionary *)wrEncodeToJSONObjectWithDateFormat:(NSString *)dateFormat {
+    return [self wrEncodeToJSONObjectWithOptions:@{WRDateFormatKey: dateFormat} error:nil];
+}
+
+- (NSDictionary *)wrEncodeToJSONObjectWithOptions:(NSDictionary *)options error:(NSError *__autoreleasing  _Nullable *)error {
     
-    NSDictionary *options = [self mapOfClass];
+    NSDictionary *storedOptions = [self mapOfClass];
+    if (storedOptions) {
+        NSMutableDictionary *mutableOptions = [options mutableCopy];
+        [mutableOptions setValuesForKeysWithDictionary:storedOptions];
+        options = mutableOptions;
+    }
     
     NSArray *names = [self _encodedPropertyNames];
     NSDateFormatter *df = [NSDateFormatter new];
+    NSString *dateFormat = options[WRDateFormatKey];
     df.dateFormat = dateFormat;
     
     NSDictionary *map = options[WRPropertyNamesMapKey];
@@ -142,7 +166,7 @@ typedef NS_ENUM(NSInteger, WRPropertyType) {
 }
 
 - (void)wrPlainDecodeFromJSON:(NSDictionary *)json {
-    [self wrPlainDecodeFromJSON:json dateFormat:DATE_FORMAT];
+    [self wrPlainDecodeFromJSON:json dateFormat:WRDefaultDateFormat];
 }
 
 - (void)wrPlainDecodeFromJSON:(NSDictionary *)json dateFormat:(NSString *)dateFormat {
@@ -150,157 +174,51 @@ typedef NS_ENUM(NSInteger, WRPropertyType) {
 }
 
 - (void)wrDecodeFromJSON:(NSDictionary *)json options:(NSDictionary *_Nullable)options {
-    
-    if (options == nil) options = [self mapOfClass];
+    [self wrDecodeFromJSON:json options:options error:nil];
+}
 
-    NSArray *names = [self allPropertyNames];
+- (BOOL)wrDecodeFromJSON:(NSDictionary *)json options:(NSDictionary *)options error:(NSError *__autoreleasing  _Nullable *)error {
+    
+    NSError *outError = nil;
+    
+    NSMutableDictionary *mutableOptions = nil;
+    // Prepare options for decoding
+    if (options == nil) {
+        mutableOptions = [NSMutableDictionary dictionary];
+    } else {
+        mutableOptions = [NSMutableDictionary dictionaryWithDictionary:options];
+    }
+    
+    NSDictionary *mapClass = [self mapOfClass];
+    if ([mapClass isKindOfClass:[NSDictionary class]]) {
+        [mutableOptions setValuesForKeysWithDictionary:mapClass];
+    }
+
     NSDateFormatter *df = [NSDateFormatter new];
     NSString *dateFormat = options[WRDateFormatKey];
-    if (!dateFormat) dateFormat = DATE_FORMAT;
-    df.dateFormat = dateFormat;
-    
-    NSDictionary *map = options[WRPropertyNamesMapKey];
-    BOOL useMappedProperties = map != nil;
-    
-    NSDictionary *dictOfClasses = options[WRDictOfClassKey];
-    
-    for (NSString *name in names) {
-        NSString *jsonName = name;
-        NSString *replacedName = map[name];
-        if (useMappedProperties && replacedName) {
-            jsonName = replacedName;
-        }
-        id val = json[jsonName];
+    df.dateFormat = dateFormat ?: WRDefaultDateFormat;
+    mutableOptions[WRDateFormatterKey] = df;
+
+    NSArray *names = [self allClassPropertyNames];
+
+    for (NSString *propertyName in names) {
         
-        NSString *typeName = nil;
-        WRPropertyType type = [self propertyType:name typeName:&typeName];
+        id val = [self _valueForPropertyName:propertyName fromJson:json options:options];
+
+        [self _decodeClassProperty:propertyName withValue:val options:mutableOptions error:&outError];
         
-        switch (type) {
-                
-            case WRPropertyTypeVoidPointer:
-            case WRPropertyTypeCharPointer:
-                NSLog(@"Pointer types unsupported: %@", name);
-                break;
-                
-            case WRPropertyTypeNull:
-                NSLog(@"NSNull type unsupported: %@", name);
-                break;
-
-            case WRPropertyTypeId: {
-                [self setValue:val forKey:name];
-            } break;
-                
-            case WRPropertyTypeObject: {
-                
-                NSDictionary *dictOptions = dictOfClasses[name];
-                
-                if (dictOptions) {
-                    NSString *className = dictOptions[WRClassNameKey];
-
-                    if ([val isKindOfClass:[NSDictionary class]] && className) {
-                        Class class = NSClassFromString(className);
-                        NSMutableDictionary *res = [NSMutableDictionary new];
-                        
-                        NSDictionary *dictOfObjects = val;
-                        [dictOfObjects enumerateKeysAndObjectsUsingBlock:^(NSString *  _Nonnull key, NSDictionary * _Nonnull obj, BOOL * _Nonnull stop) {
-                            if ([obj isKindOfClass:[NSDictionary class]]) {
-                                
-                                id classInstanse = [[class alloc] init];
-                                [classInstanse wrDecodeFromJSON:obj options:nil];
-                                res[key] = classInstanse;
-                            }
-                        }];
-                        [self setValue:res forKey:name];
-
-                    } else {
-                        NSLog(@"ERROR: Fail decode property: %@ from value: %@, params: %@", name, val, dictOptions);
-                    }
-                } else {
-                    Class class = NSClassFromString(typeName);
-                    
-                    if (class == nil) {
-                        NSLog(@"ERROR: Fail decode property, unavailable class: %@ from value: %@, property: %@", typeName, val, name);
-                        
-                    } else if ([class isSubclassOfClass:[NSString class]]) {
-                        [self setValue:[val description] forKey:name];
-
-                    } else if ([class isSubclassOfClass:[NSDate class]]) {
-                        NSDate *date = [df dateFromString:[val description]];
-                        [self setValue:date forKey:name];
-                        
-                    } else if ([val isKindOfClass:[NSDictionary class]]) {
-                        NSString *className = typeName;
-                        Class subClass = NSClassFromString(className);
-                        
-                        if ([subClass isSubclassOfClass:[NSDictionary class]]) {
-                            [self setValue:val forKey:name];
-
-                        } else { // Custom class
-                            
-                            id classInstanse = [[subClass alloc] init];
-                            [classInstanse wrDecodeFromJSON:val options:nil];
-                            [self setValue:classInstanse forKey:name];
-                        }
-
-                    } else if (val == nil || [val isKindOfClass:[NSNull class]]) {
-                        [self setValue:nil forKey:name];
-                    } else {
-                        [self setValue:val forKey:name];
-                        NSLog(@"WARNING: Set property: %@, for type: %@, value: %@", name, typeName, val);
-                    }
-                }
-
-            } break;
-                
-            case WRPropertyTypeUInt:
-                [self setValue:@([val unsignedIntValue]) forKey:name];
-                break;
-            case WRPropertyTypeInt:
-                [self setValue:@([val intValue]) forKey:name];
-                break;
-            case WRPropertyTypeDouble:
-                [self setValue:@([val doubleValue]) forKey:name];
-                break;
-            case WRPropertyTypeUShort:
-                [self setValue:@([val unsignedShortValue]) forKey:name];
-                break;
-            case WRPropertyTypeFloat:
-                [self setValue:@([val floatValue]) forKey:name];
-                break;
-            case WRPropertyTypeInteger:
-                [self setValue:@([val integerValue]) forKey:name];
-                break;
-            case WRPropertyTypeUInteger:
-                [self setValue:@([val unsignedIntegerValue]) forKey:name];
-                break;
-            case WRPropertyTypeBool:
-                [self setValue:@([val boolValue]) forKey:name];
-                break;
-            case WRPropertyTypeShort:
-                [self setValue:@([val shortValue]) forKey:name];
-                break;
-            case WRPropertyTypeChar:
-            case WRPropertyTypeUChar: {
-                NSString *str = val;
-                if ([str isKindOfClass:[NSString class]] && str.length) {
-                    const char *cStr = [(NSString*)val UTF8String];
-                    char c = cStr[0];
-                    [self setValue:@(c) forKey:name];
-                } else if ([val isKindOfClass:[NSNumber class]]) {
-                    [self setValue:val forKey:name];
-                }
-            } break;
-                
-            case WRPropertyTypeUnknown:
-                NSLog(@"ERROR: unimplemeted primitive type to decode: %@!", typeName);
-                break;
-        }
-        
+        if (outError) break;
     }
+    
+    if (error) {
+        *error = outError;
+    }
+    
+    return outError == nil;
 }
 
 + (NSString *)wrGenerateClass:(NSString *)className fromJSON:(nonnull id)jsonObject renamedProperties:(NSDictionary *__autoreleasing  _Nullable * _Nullable)propMap {
-    NSDictionary *options = @{WRDateFormatKey:DATE_FORMAT,
+    NSDictionary *options = @{WRDateFormatKey:WRDefaultDateFormat,
                               WRPropertyNamesMapKey: @{@"description":@"desc"}};
     return [NSObject wrGenerateClass:className fromJSON:jsonObject renamedProperties:propMap options:options];
 }
@@ -323,7 +241,7 @@ typedef NS_ENUM(NSInteger, WRPropertyType) {
 
     NSDateFormatter *df = [NSDateFormatter new];
     NSString *dateFormat = options[WRDateFormatKey];
-    if (!dateFormat) dateFormat = DATE_FORMAT;
+    if (!dateFormat) dateFormat = WRDefaultDateFormat;
     df.dateFormat = dateFormat;
     
     NSMutableDictionary *map = [options[WRPropertyNamesMapKey] mutableCopy];
@@ -491,6 +409,210 @@ typedef NS_ENUM(NSInteger, WRPropertyType) {
 }
 
 
+#pragma mark - Private
+
+- (void) _decodeClassProperty:(NSString*)propertyName withValue:(id _Nullable)val options:(NSDictionary*)options error:(NSError*__autoreleasing _Nullable*)error {
+    
+    BOOL required = NO;
+    NSSet *requiredProperties = options[WRRequiredPropertiesKey];
+    if (requiredProperties) {
+        required = [requiredProperties containsObject:propertyName];
+    }
+    if (required && val == nil) {
+        NSDictionary *info = @{NSLocalizedDescriptionKey:[NSString stringWithFormat:@"[%@] Required property '%@' is nil", NSStringFromClass(self.class), propertyName]};
+        NSError *err = [NSError errorWithDomain:WRErrorDomain code:WRErrorRequiredParamIsNil userInfo:info];
+        
+        if (error) {
+            *error = err;
+        }
+        return;
+    }
+    
+    NSError *outError = nil;
+    
+    NSString *typeName = nil;
+    WRPropertyType type = [self propertyType:propertyName typeName:&typeName];
+    
+    switch (type) {
+            
+        case WRPropertyTypeVoidPointer:
+        case WRPropertyTypeCharPointer:
+        case WRPropertyTypeNull:
+            NSLog(@"Unsupported type %ld for property %@", type, propertyName);
+            break;
+            
+        case WRPropertyTypeId: {
+            
+            if (required && ![val isKindOfClass:[NSObject class]]) {
+                NSDictionary *info = @{NSLocalizedDescriptionKey:[NSString stringWithFormat:@"[%@] Property %@ is not NSObject", NSStringFromClass(self.class), propertyName]};
+                outError = [NSError errorWithDomain:WRErrorDomain code:WRErrorBadPropertyValue userInfo:info];
+            } else {
+                [self setValue:val forKey:propertyName];
+            }
+        } break;
+            
+        case WRPropertyTypeObject: {
+            
+            [self _decodeObjectProperty:propertyName typeName:typeName withValue:val options:options error:&outError];
+
+        } break;
+            
+        case WRPropertyTypeUInt:
+            [self setValue:@([val unsignedIntValue]) forKey:propertyName];
+            break;
+        case WRPropertyTypeInt:
+            [self setValue:@([val intValue]) forKey:propertyName];
+            break;
+        case WRPropertyTypeDouble:
+            [self setValue:@([val doubleValue]) forKey:propertyName];
+            break;
+        case WRPropertyTypeUShort:
+            [self setValue:@([val unsignedShortValue]) forKey:propertyName];
+            break;
+        case WRPropertyTypeFloat:
+            [self setValue:@([val floatValue]) forKey:propertyName];
+            break;
+        case WRPropertyTypeInteger:
+            [self setValue:@([val integerValue]) forKey:propertyName];
+            break;
+        case WRPropertyTypeUInteger:
+            [self setValue:@([val unsignedIntegerValue]) forKey:propertyName];
+            break;
+        case WRPropertyTypeBool:
+            [self setValue:@([val boolValue]) forKey:propertyName];
+            break;
+        case WRPropertyTypeShort:
+            [self setValue:@([val shortValue]) forKey:propertyName];
+            break;
+        case WRPropertyTypeChar:
+        case WRPropertyTypeUChar: {
+            NSString *str = val;
+            if ([str isKindOfClass:[NSString class]] && str.length) {
+                const char *cStr = [(NSString*)val UTF8String];
+                char c = cStr[0];
+                [self setValue:@(c) forKey:propertyName];
+            } else if ([val isKindOfClass:[NSNumber class]]) {
+                [self setValue:val forKey:propertyName];
+            }
+        } break;
+            
+        case WRPropertyTypeUnknown: {
+            NSDictionary *info = @{NSLocalizedDescriptionKey:[NSString stringWithFormat:@"[%@] Unimplemeted primitive type to decode: %@!", NSStringFromClass(self.class), typeName]};
+            outError = [NSError errorWithDomain:WRErrorDomain code:WRErrorUndefined userInfo:info];
+        } break;
+    }
+
+    
+    if (error) {
+        *error = outError;
+    }
+}
+
+- (void) _decodeObjectProperty:(NSString*)propertyName typeName:(NSString*)typeName withValue:(id)val options:(NSDictionary*)options error:(NSError*__autoreleasing _Nullable*)error {
+    
+    __block NSError *outError = nil;
+    NSDictionary *dictOfClasses = options[WRDictOfClassKey];
+    NSDictionary *dictOptions = dictOfClasses[propertyName];
+    
+    if (dictOptions) {
+        NSString *className = dictOptions[WRClassNameKey];
+        
+        if ([val isKindOfClass:[NSDictionary class]] && className) {
+            Class class = NSClassFromString(className);
+            if (class == nil) {
+                NSDictionary *info = @{NSLocalizedDescriptionKey:[NSString stringWithFormat:@"[%@] Fail decode nonexistent class: %@ property: %@", NSStringFromClass(self.class), typeName, propertyName]};
+                outError = [NSError errorWithDomain:WRErrorDomain code:WRErrorClassNonexistent userInfo:info];
+
+            } else {
+                
+                NSMutableDictionary *result = [NSMutableDictionary new];
+                
+                NSDictionary *dictOfObjects = val;
+                [dictOfObjects enumerateKeysAndObjectsUsingBlock:^(NSString * _Nonnull key, NSDictionary * _Nonnull obj, BOOL * _Nonnull stop) {
+                    if ([obj isKindOfClass:[NSDictionary class]]) {
+                        
+                        id classInstanse = [[class alloc] init];
+                        [classInstanse wrDecodeFromJSON:obj options:nil error:&outError];
+                        result[key] = classInstanse;
+                        
+                        if (outError) {
+                            *stop = YES;
+                        }
+                    }
+                }];
+                [self setValue:result forKey:propertyName];
+            }
+            
+        } else {
+            
+            NSDictionary * info = @{NSLocalizedDescriptionKey:[NSString stringWithFormat:@"[%@] Fail decode property: %@ from value: %@, params: %@", NSStringFromClass(self.class), propertyName, val, dictOptions]};
+            outError = [NSError errorWithDomain:WRErrorDomain code:WRErrorBadPropertyValue userInfo:info];
+        }
+    } else {
+        Class class = NSClassFromString(typeName);
+        
+        if (class == nil) {
+            NSDictionary *info = @{NSLocalizedDescriptionKey:[NSString stringWithFormat:@"[%@] Fail decode nonexistent class: %@ property: %@", NSStringFromClass(self.class), typeName, propertyName]};
+            outError = [NSError errorWithDomain:WRErrorDomain code:WRErrorClassNonexistent userInfo:info];
+            
+        } else if ([class isSubclassOfClass:[NSString class]]) {
+            [self setValue:[val description] forKey:propertyName];
+            
+        } else if ([class isSubclassOfClass:[NSNumber class]]) {
+            static NSNumberFormatter *f; if (!f) f = [[NSNumberFormatter alloc] init];
+            f.numberStyle = NSNumberFormatterDecimalStyle;
+            NSNumber *number = [f numberFromString:val];
+            [self setValue:number forKey:propertyName];
+            
+        } else if ([class isSubclassOfClass:[NSDate class]]) {
+            NSDateFormatter *df = options[WRDateFormatterKey];
+            NSDate *date = [df dateFromString:[val description]];
+            [self setValue:date forKey:propertyName];
+            
+        } else if ([val isKindOfClass:[NSDictionary class]]) {
+            NSString *className = typeName;
+            Class subClass = NSClassFromString(className);
+            
+            if ([subClass isSubclassOfClass:[NSDictionary class]]) {
+                [self setValue:val forKey:propertyName];
+                
+            } else { // Custom class
+                
+                id classInstanse = [[subClass alloc] init];
+                [classInstanse wrDecodeFromJSON:val options:nil];
+                [self setValue:classInstanse forKey:propertyName];
+            }
+            
+        } else if (val == nil || [val isKindOfClass:[NSNull class]]) {
+            [self setValue:nil forKey:propertyName];
+        } else {
+            [self setValue:val forKey:propertyName];
+            NSLog(@"WARNING: Set property: %@, for type: %@, value: %@", propertyName, typeName, val);
+        }
+    }
+    
+    if (error) {
+        *error = outError;
+    }
+}
+
+- (id __nullable) _valueForPropertyName:(NSString*)propertyName fromJson:(NSDictionary*)json options:(NSDictionary*)options {
+    
+    NSDictionary *map = options[WRPropertyNamesMapKey];
+    BOOL useMappedProperties = map != nil;
+    
+    NSString *jsonName = propertyName;
+    NSString *replacedName = map[propertyName];
+    
+    if (useMappedProperties && replacedName) {
+        jsonName = replacedName;
+    }
+    id val = json[jsonName];
+    
+    return val;
+}
+
+
 #pragma mark - Helpers
 
 - (NSDictionary * __nullable) mapOfClass {
@@ -505,7 +627,7 @@ typedef NS_ENUM(NSInteger, WRPropertyType) {
     return nil;
 }
 
-- (NSArray *)allPropertyNames {
+- (NSArray *)allClassPropertyNames {
     
     unsigned count;
     objc_property_t *properties = class_copyPropertyList([self class], &count);
@@ -531,12 +653,14 @@ typedef NS_ENUM(NSInteger, WRPropertyType) {
 
 - (NSArray*) _encodedPropertyNames {
     
-    NSArray *properties = [self allPropertyNames];
+    NSArray *properties = [self allClassPropertyNames];
     NSMutableArray *result = [NSMutableArray new];
     
     for (NSString *name in properties) {
         if ([self _isPropertySupportDecode:name]) {
             [result addObject:name];
+        } else {
+            NSLog(@"Property: '%@' unsuport decode", name);
         }
     }
     
@@ -558,6 +682,8 @@ typedef NS_ENUM(NSInteger, WRPropertyType) {
         case WRPropertyTypeInteger:
         case WRPropertyTypeUInteger:
         case WRPropertyTypeChar:
+        case WRPropertyTypeBool:
+        case WRPropertyTypeDouble:
             
             return YES;
             break;
