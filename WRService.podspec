@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
   s.name             = 'WRService'
-  s.version          = '0.1.0'
+  s.version          = '0.1.2'
   s.summary          = 'WRService is light and convinient tool for working with an API via NSURLSession for most of applications.'
 
 # This description is used to generate tags and improve search results.
