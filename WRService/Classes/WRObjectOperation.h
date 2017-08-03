@@ -37,7 +37,7 @@ typedef NSString HTTPMethod;
 
 @protocol WRRequestProtocol <NSObject>
 
-@required
+@optional
 + (NSURL*) urlForMethod:(HTTPMethod*)method;
 
 
