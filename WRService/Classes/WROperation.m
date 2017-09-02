@@ -37,7 +37,7 @@ typedef NS_OPTIONS(NSUInteger, WRDelegateOption) {
 
 - (instancetype)initWithUrl:(NSURL *)url
 {
-    if (url == nil) return nil;
+    if (url == nil) [[NSException exceptionWithName:NSStringFromClass([WROperation class]) reason:@"URL is nil" userInfo:nil] raise];
     
     self = [self init];
     if (self) {
@@ -49,7 +49,7 @@ typedef NS_OPTIONS(NSUInteger, WRDelegateOption) {
 
 - (instancetype)initWithRequest:(NSURLRequest *)request
 {
-    if (request == nil) return nil;
+    if (request == nil) [[NSException exceptionWithName:NSStringFromClass([WROperation class]) reason:@"NSURLRequest is nil" userInfo:nil] raise];
 
     self = [self init];
     if (self) {
