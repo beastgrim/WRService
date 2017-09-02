@@ -59,8 +59,8 @@ typedef NS_ENUM(NSInteger, WROperationPriority) {
 
 #pragma mark Initialize
 
-- (instancetype __nullable) initWithUrl:(NSURL*)url;
-- (instancetype __nullable) initWithRequest:(NSURLRequest*)request;
+- (instancetype) initWithUrl:(NSURL*)url;
+- (instancetype) initWithRequest:(NSURLRequest*)request;
 
 /**
  @brief Process data to convert to expected class.
