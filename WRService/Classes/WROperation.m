@@ -187,16 +187,18 @@ typedef NS_OPTIONS(NSUInteger, WRDelegateOption) {
             [exeption raise];
         }
         
-        dispatch_async(dispatch_get_main_queue(), ^{
-            if ([result isKindOfClass:[NSError class]]) {
-                [self didCompleteWithError:result];
-            }
-            if (_successCallback) {
-                _successCallback(self, result);
-            } else if (_delegateSettings & WRDelegateOptionSuccess) {
-                [_delegate operation:self didFinishWithResult:result];
-            }
-        });
+        if ([result isKindOfClass:[NSError class]]) {
+            [self didCompleteWithError:result];
+        } else {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                
+                if (_successCallback) {
+                    _successCallback(self, result);
+                } else if (_delegateSettings & WRDelegateOptionSuccess) {
+                    [_delegate operation:self didFinishWithResult:result];
+                }
+            });
+        }  
     }
 }
 
