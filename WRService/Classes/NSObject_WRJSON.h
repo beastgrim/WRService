@@ -12,6 +12,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 typedef NSString * const WRKey;
 
+typedef enum {
+    WRNamingConvention_UppercaseFirstLetters
+} WRNamingConvention;
+
 extern WRKey WRDefaultDateFormat;
 extern WRKey WRErrorDomain;
 
@@ -19,6 +23,9 @@ extern WRKey WRDateFormatKey;
 extern WRKey WRDictOfClassKey;
 extern WRKey WRClassNameKey;
 extern WRKey WRClassPropertyNameForDictKey;
+
+//Decode options
+extern WRKey WRDecodeOption_NamingConvention;
 
 /**
  @brief Use this key for decoding when json keys not the same that Class properties names.

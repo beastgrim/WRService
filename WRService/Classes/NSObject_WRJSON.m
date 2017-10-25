@@ -23,6 +23,9 @@ WRKey WRRequiredPropertiesKey = @"WRRequiredPropertiesKey";
 WRKey WRJsonClassMapKey = @"WRJsonClassMapKey";
 WRKey WRDateFormatterKey = @"WRDateFormatterKey";
 
+//Decode options
+WRKey WRDecodeOption_NamingConvention = @"WRDecodeOption_NamingConvention";
+
 
 typedef NS_ENUM(NSInteger, WRPropertyType) {
     WRPropertyTypeUnknown = 0,
@@ -558,6 +561,11 @@ typedef NS_ENUM(NSInteger, WRError) {
         } else if ([class isSubclassOfClass:[NSString class]]) {
             [self setValue:[val description] forKey:propertyName];
             
+        } else if ([class isSubclassOfClass:[NSURL class]]) {
+            NSString* string = @"";
+            if ([val isKindOfClass:[NSString class]]) string = (NSString*)val;
+            [self setValue:[NSURL URLWithString:string] forKey:propertyName];
+
         } else if ([class isSubclassOfClass:[NSNumber class]]) {
             static NSNumberFormatter *f; if (!f) f = [[NSNumberFormatter alloc] init];
             f.numberStyle = NSNumberFormatterDecimalStyle;
@@ -607,6 +615,16 @@ typedef NS_ENUM(NSInteger, WRError) {
     if (useMappedProperties && replacedName) {
         jsonName = replacedName;
     }
+
+
+    //Сonversion in compliance of naming convention for JSON property
+    id namingConventionOption = options[WRDecodeOption_NamingConvention];
+    if ([namingConventionOption isKindOfClass:[NSNumber class]]) {
+        WRNamingConvention namingConvention = (WRNamingConvention)[((NSNumber*) namingConventionOption) unsignedIntegerValue];
+        jsonName = [self convertPropertyName:jsonName inComplianceOfNamingConvention:namingConvention];
+    }
+
+
     id val = json[jsonName];
     
     return val;
@@ -614,6 +632,13 @@ typedef NS_ENUM(NSInteger, WRError) {
 
 
 #pragma mark - Helpers
+
+- (NSString*) convertPropertyName:(NSString*)propertyName inComplianceOfNamingConvention:(WRNamingConvention)namingConvention {
+    if (namingConvention == WRNamingConvention_UppercaseFirstLetters) {
+        NSRange range; range.location = 0; range.length = 1;
+        return [propertyName stringByReplacingCharactersInRange:range withString:[[propertyName substringWithRange:range] uppercaseString]];
+    } else return propertyName;
+}
 
 - (NSDictionary * __nullable) mapOfClass {
     NSString *mapPath = [[NSBundle mainBundle] pathForResource:NSStringFromClass([self class]) ofType:@"map"];
