@@ -35,6 +35,10 @@
     return service;
 }
 
++ (void)printInformation {
+    WRService *service = [WRService shared];
+    [service _printTasks];
+}
 
 - (instancetype)init
 {
@@ -55,6 +59,7 @@
          */
         
         NSURLSessionConfiguration *conf = [NSURLSessionConfiguration defaultSessionConfiguration];
+//        [conf setRequestCachePolicy:NSURLRequestReturnCacheDataDontLoad];
         _defaultQueue = [[WRQueue alloc] initWithConfiguration:conf queue:_queue];
         _defaultQueue.defaultTaskPriority = 0.6;
         _defaultQueue.delegate = self;
@@ -113,6 +118,58 @@
 
 
 #pragma mark - Private
+
+- (void) _printTasks {
+    
+    dispatch_group_t waiter = dispatch_group_create();
+    __block NSMutableArray<__kindof WROperation *> *defaultTasks;
+    __block NSArray<__kindof WROperation *> *backgroundTasks;
+    
+    dispatch_group_enter(waiter);
+    [_defaultQueue getAllTasksWithCompletionHandler:^(NSArray<__kindof WROperation *> * _Nonnull tasks) {
+        defaultTasks = [tasks mutableCopy];
+        dispatch_group_leave(waiter);
+    }];
+    dispatch_group_enter(waiter);
+    [_backgroundQueue getAllTasksWithCompletionHandler:^(NSArray<__kindof WROperation *> * _Nonnull tasks) {
+        backgroundTasks = tasks;
+        dispatch_group_leave(waiter);
+    }];
+    
+    dispatch_group_notify(waiter, _queue, ^{
+        
+        printf("\n\n============ WRService operatiions ============\n");
+        NSArray *exclusive = [defaultTasks filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"priority == %@", @(WROperationPriorityExclusive)]];
+        [defaultTasks filterUsingPredicate:[NSPredicate predicateWithFormat:@"priority != %@", @(WROperationPriorityExclusive)]];
+        
+        if (exclusive.count) {
+            printf("---------------- Exclusive:  %ld ----------------\n", exclusive.count);
+            for (WROperation *t in exclusive) {
+                [self _printTask:t];
+            }
+        }
+        if (defaultTasks.count) {
+            printf("---------------- Default:    %ld ----------------\n", defaultTasks.count);
+            for (WROperation *t in defaultTasks) {
+                [self _printTask:t];
+            }
+        }
+        if (backgroundTasks.count) {
+            printf("---------------- Background: %ld ----------------\n", backgroundTasks.count);
+            for (WROperation *t in backgroundTasks) {
+                [self _printTask:t];
+            }
+        }
+        printf("===============================================\n");
+        printf("\n");
+    });
+}
+
+- (void) _printTask:(WROperation*)op {
+    NSURLRequest *req = op.request;
+    NSString *suspended = op.isSuspended ? @"[SUSPENDED]" : @"";
+    printf("[%s] %s %s\n", req.HTTPMethod.UTF8String, req.URL.absoluteString.UTF8String, suspended.UTF8String);
+}
 
 - (void) _executeOperation:(WROperation *)op {
     

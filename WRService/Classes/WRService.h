@@ -31,6 +31,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void) setAuthChallengeCallback:(void(^)(WROperationPriority queuePriority, NSURLAuthenticationChallenge *challenge, void (^completionHandler)(NSURLSessionAuthChallengeDisposition disposition, NSURLCredential * _Nullable credential)))callback;
 
+
++ (void) printInformation;
+
 @end
 
 NS_ASSUME_NONNULL_END

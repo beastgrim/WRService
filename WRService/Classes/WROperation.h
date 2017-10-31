@@ -50,6 +50,7 @@ typedef NS_ENUM(NSInteger, WROperationPriority) {
 @property (nonatomic, copy) WRFailCallback __nullable failCallback;
 @property (nonatomic, copy) WRSuccessCallback __nullable successCallback;
 
+@property (readonly) BOOL isSuspended;
 
 // KVO properties
 @property (readonly, getter=isFinished) BOOL finished;

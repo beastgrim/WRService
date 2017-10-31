@@ -113,6 +113,9 @@ typedef NS_OPTIONS(NSUInteger, WRDelegateOption) {
 - (NSData *)responseData {
     return _data;
 }
+- (BOOL)isSuspended {
+    return _task.state == NSURLSessionTaskStateSuspended;
+}
 
 
 #pragma mark - Setters

@@ -120,6 +120,13 @@ NSErrorDomain const WRQueueErrorDomain = @"WRQueueErrorDomain";
     }];
 }
 
+- (void)getAllTasksWithCompletionHandler:(void (^)(NSArray<__kindof WROperation *> * _Nonnull))completion {
+    
+    dispatch_async(_queue, ^{
+        completion(_operations.allValues);
+    });
+}
+
 
 #pragma mark - Private
 

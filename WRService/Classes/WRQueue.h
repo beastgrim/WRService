@@ -36,6 +36,8 @@ typedef NS_ENUM(NSUInteger, WRQueueError) {
 - (void) suspendAllTasks;
 - (void) resumeAllTasks;
 
+- (void) getAllTasksWithCompletionHandler:(void(^)(NSArray<__kindof WROperation *> * _Nonnull tasks))completion;
+
 @end
 
 
