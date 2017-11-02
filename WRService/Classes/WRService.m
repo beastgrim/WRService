@@ -89,6 +89,10 @@
     __block NSError *err = nil;
     
     if (sem) {
+        op.cancelCallback = ^(WROperation * _Nonnull op) {
+            err = [NSError errorWithDomain:NSStringFromClass(op.class) code:1 userInfo:@{NSLocalizedDescriptionKey:@"Operation was cancelled."}];
+            dispatch_semaphore_signal(sem);
+        };
         [self execute:op onSuccess:^(WROperation * _Nonnull op, id  _Nonnull result) {
             res = result;
             dispatch_semaphore_signal(sem);
