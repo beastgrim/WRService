@@ -219,4 +219,16 @@ typedef NS_OPTIONS(NSUInteger, WRDelegateOption) {
     completionHandler(NSURLSessionAuthChallengePerformDefaultHandling, nil);
 }
 
+#pragma mark - Helpers
+
+- (NSString *)debugDescription {
+    NSString *desc = [super description];
+    NSString *requestData = [[NSString alloc] initWithData:self.request.HTTPBody encoding:NSUTF8StringEncoding];
+    NSString *responseData = [[NSString alloc] initWithData:self.responseData encoding:NSUTF8StringEncoding];
+    NSString *requestInfo = [NSString stringWithFormat:@"{ http method: %@, headers %@\n[DATA]: %@", self.request.HTTPMethod, self.request.allHTTPHeaderFields ?: @{}, requestData.length ? requestData: [NSString stringWithFormat:@"%lu-byte body", self.request.HTTPBody.length]];
+    return [NSString stringWithFormat:@"%@\n[REQUEST]: %@ %@\n\n[RESPONSE]: %@\n[DATA]: %@", desc, self.request, requestInfo, self.HTTPResponse ?: self.response, responseData.length ? responseData : [NSString stringWithFormat:@"%lu-byte body", self.responseData.length]];
+}
+
+
+
 @end
