@@ -11,6 +11,8 @@
 		12E931EA395F66392E2226C721FE6514 /* Pods-WRService_Example-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 13D57FE72B22D797C1398533A62E44BC /* Pods-WRService_Example-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		4663F5ED6D21FC2958E8521550A4EC15 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6604A7D69453B4569E4E4827FB9155A9 /* Foundation.framework */; };
 		5DA561FE2E4D1BE6A4E66F08709C8EA9 /* Pods-WRService_Example-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C6CC2E790D4E8A74B15E511385FD1A3 /* Pods-WRService_Example-dummy.m */; };
+		8467B99D1FAB46070000EDDA /* WRServiceSynchronousResult.h in Headers */ = {isa = PBXBuildFile; fileRef = 8467B99B1FAB46070000EDDA /* WRServiceSynchronousResult.h */; };
+		8467B99E1FAB46070000EDDA /* WRServiceSynchronousResult.m in Sources */ = {isa = PBXBuildFile; fileRef = 8467B99C1FAB46070000EDDA /* WRServiceSynchronousResult.m */; };
 		8B0A6532697A83BD9670AEE24DA722D6 /* WRService-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = ABCF9A3C427D34EF3894314B4ED4EA50 /* WRService-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		90C0C9411F31FC9200BA5A1E /* NSObject_WRJSON.m in Sources */ = {isa = PBXBuildFile; fileRef = 973E2C731EC20A3B00665551 /* NSObject_WRJSON.m */; };
 		973E2C7E1EC20A3B00665551 /* NSObject_WRJSON.h in Headers */ = {isa = PBXBuildFile; fileRef = 973E2C721EC20A3B00665551 /* NSObject_WRJSON.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -58,6 +60,8 @@
 		75D1BB65E306030B9C7080ED7661F314 /* Pods_WRService_Tests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_WRService_Tests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		820B57B6D0238BDB1700D44839008EB8 /* Pods_WRService_Example.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_WRService_Example.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		8434C02693986FF90C5EC2AD65660229 /* Pods-WRService_Tests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-WRService_Tests.release.xcconfig"; sourceTree = "<group>"; };
+		8467B99B1FAB46070000EDDA /* WRServiceSynchronousResult.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WRServiceSynchronousResult.h; sourceTree = "<group>"; };
+		8467B99C1FAB46070000EDDA /* WRServiceSynchronousResult.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = WRServiceSynchronousResult.m; sourceTree = "<group>"; };
 		848BEF0F61E4C4F87E7F22C030B4A2EF /* Pods-WRService_Example-acknowledgements.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-WRService_Example-acknowledgements.plist"; sourceTree = "<group>"; };
 		893796D1B3836DC126732A74A48021B5 /* WRService.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = WRService.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		8ADEA6B87B379FE79FA47E6BB4990F1A /* Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -180,6 +184,8 @@
 				973E2C7B1EC20A3B00665551 /* WRQueue.m */,
 				973E2C7C1EC20A3B00665551 /* WRService.h */,
 				973E2C7D1EC20A3B00665551 /* WRService.m */,
+				8467B99B1FAB46070000EDDA /* WRServiceSynchronousResult.h */,
+				8467B99C1FAB46070000EDDA /* WRServiceSynchronousResult.m */,
 			);
 			path = Classes;
 			sourceTree = "<group>";
@@ -279,6 +285,7 @@
 				973E2C861EC20A3B00665551 /* WRQueue.h in Headers */,
 				973E2C831EC20A3B00665551 /* WROperation.h in Headers */,
 				973E2C821EC20A3B00665551 /* WROperation_Private.h in Headers */,
+				8467B99D1FAB46070000EDDA /* WRServiceSynchronousResult.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -383,6 +390,7 @@
 				973E2C841EC20A3B00665551 /* WROperation.m in Sources */,
 				973E2C871EC20A3B00665551 /* WRQueue.m in Sources */,
 				973E2C891EC20A3B00665551 /* WRService.m in Sources */,
+				8467B99E1FAB46070000EDDA /* WRServiceSynchronousResult.m in Sources */,
 				973E2C811EC20A3B00665551 /* WRObjectOperation.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

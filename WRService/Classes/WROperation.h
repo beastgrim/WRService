@@ -17,6 +17,7 @@ extern NSErrorDomain const WROperationErrorDomain;
 
 typedef void (^WRSuccessCallback)(WROperation *op, id result);
 typedef void (^WRFailCallback)(WROperation *op, NSError *error);
+typedef void (^WRCancelCallback)(WROperation *op);
 typedef void (^WRProgressCallback)(float progress);
 typedef NS_ENUM(NSInteger, WROperationPriority) {
     WROperationPriorityDefault = 0,
@@ -49,6 +50,7 @@ typedef NS_ENUM(NSInteger, WROperationPriority) {
 // Callback support
 @property (nonatomic, copy) WRFailCallback __nullable failCallback;
 @property (nonatomic, copy) WRSuccessCallback __nullable successCallback;
+@property (nonatomic, copy) WRCancelCallback __nullable cancelCallback;
 
 @property (readonly) BOOL isSuspended;
 

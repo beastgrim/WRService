@@ -10,6 +10,7 @@
 #import "WROperation.h"
 #import "WRObjectOperation.h"
 #import "WRProgressProtocol.h"
+#import "WRServiceSynchronousResult.h"
 
 
 NS_ASSUME_NONNULL_BEGIN
@@ -22,6 +23,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (void) execute:(WROperation*)op onSuccess:(WRSuccessCallback)success onFail:(WRFailCallback __nullable)fail;
 + (void) execute:(WROperation*)op withDelegate:(id<WROperationDelegate>)delegate;
+
++ (WRServiceSynchronousResult*) synchronousExecute:(WROperation*)op;
 
 - (void) execute:(WROperation*)op onSuccess:(WRSuccessCallback)success onFail:(WRFailCallback __nullable)fail;
 - (void) execute:(WROperation*)op withDelegate:(id<WROperationDelegate>)delegate;

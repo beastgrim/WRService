@@ -76,6 +76,10 @@ typedef NS_OPTIONS(NSUInteger, WRDelegateOption) {
     self.progressCallback = nil;
     self.canceled = YES;
     [_task cancel];
+    if (_cancelCallback) {
+        self.cancelCallback(self);
+        self.cancelCallback = nil;
+    }
 }
 
 - (id)processResult:(id)result {

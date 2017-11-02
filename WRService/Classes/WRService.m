@@ -82,6 +82,29 @@
     [[self shared] execute:op withDelegate:delegate];
 }
 
++ (WRServiceSynchronousResult *)synchronousExecute:(WROperation *)op {
+    
+    dispatch_semaphore_t sem = dispatch_semaphore_create(0);
+    __block id res;
+    __block NSError *err = nil;
+    
+    if (sem) {
+        [self execute:op onSuccess:^(WROperation * _Nonnull op, id  _Nonnull result) {
+            res = result;
+            dispatch_semaphore_signal(sem);
+        } onFail:^(WROperation * _Nonnull op, NSError * _Nonnull error) {
+            err = error;
+            dispatch_semaphore_signal(sem);
+        }];
+        dispatch_semaphore_wait(sem, DISPATCH_TIME_FOREVER);
+    } else {
+        err = [NSError errorWithDomain:NSStringFromClass(self) code:1 userInfo:@{NSLocalizedDescriptionKey:@"Error creare semaphore."}];
+    }
+    
+    WRServiceSynchronousResult *result = [[WRServiceSynchronousResult alloc] initWithResult:res error:err];
+    
+    return result;
+}
 
 - (void)execute:(WROperation *)op onSuccess:(WRSuccessCallback)success onFail:(WRFailCallback)fail {
     
