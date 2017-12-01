@@ -278,7 +278,7 @@ typedef NS_ENUM(NSInteger, WRError) {
             
             NSDictionary *dictOptions = dictOfClasses[key];
             if (dictOptions) {
-                NSLog(@"Options: %@", dictOptions);
+
                 NSString *newClassName = dictOptions[WRClassNameKey];
                 if (newClassName) subClassName = newClassName;
                 

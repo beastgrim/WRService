@@ -154,7 +154,7 @@ NSErrorDomain const WRQueueErrorDomain = @"WRQueueErrorDomain";
 #pragma mark - NSURLSessionDelegate
 
 - (void)URLSession:(NSURLSession *)session didBecomeInvalidWithError:(nullable NSError *)error {
-    NSLog(@"didBecomeInvalidWithError: %@", error);
+    NSLog(@"URLSession: %@ didBecomeInvalidWithError: %@", session, error);
 }
 
 - (void)URLSession:(NSURLSession *)session didReceiveChallenge:(NSURLAuthenticationChallenge *)challenge
