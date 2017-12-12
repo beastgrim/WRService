@@ -46,7 +46,7 @@ typedef NSString HTTPMethod;
 
 
 
-@protocol WRJSONRepresentable <WRObjectOperationProtocol, WRRequestProtocol>
+@protocol WRJSONRepresentable <WRObjectOperationProtocol>
 
 @required
 - (NSDictionary*) jsonRepresentation;
