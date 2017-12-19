@@ -83,7 +83,8 @@ typedef NS_ENUM(NSInteger, WRError) {
     
     NSArray *names = [self _encodedPropertyNames];
     NSDateFormatter *df = [NSDateFormatter new];
-    NSString *dateFormat = options[WRDateFormatKey];
+    df.locale = [NSLocale localeWithLocaleIdentifier:@"en_US_POSIX"];
+  NSString *dateFormat = options[WRDateFormatKey];
     df.dateFormat = dateFormat;
     
     NSDictionary *map = options[WRPropertyNamesMapKey];
@@ -198,6 +199,7 @@ typedef NS_ENUM(NSInteger, WRError) {
     }
 
     NSDateFormatter *df = [NSDateFormatter new];
+    df.locale = [NSLocale localeWithLocaleIdentifier:@"en_US_POSIX"];
     NSString *dateFormat = options[WRDateFormatKey];
     df.dateFormat = dateFormat ?: WRDefaultDateFormat;
     mutableOptions[WRDateFormatterKey] = df;
@@ -243,6 +245,7 @@ typedef NS_ENUM(NSInteger, WRError) {
     NSLog(@"[WRService]: Generating class from JSON:\n%@\n\n", json);
 
     NSDateFormatter *df = [NSDateFormatter new];
+    df.locale = [NSLocale localeWithLocaleIdentifier:@"en_US_POSIX"];
     NSString *dateFormat = options[WRDateFormatKey];
     if (!dateFormat) dateFormat = WRDefaultDateFormat;
     df.dateFormat = dateFormat;

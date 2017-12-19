@@ -177,7 +177,11 @@ NSErrorDomain const WRQueueErrorDomain = @"WRQueueErrorDomain";
 - (void)URLSession:(NSURLSession *)session task:(NSURLSessionTask *)task didCompleteWithError:(nullable NSError *)error {
     
     WROperation *op = [self operationOfTask:task];
-    [op didCompleteWithError:error];
+    
+    dispatch_queue_t concurrentQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
+    dispatch_async(concurrentQueue, ^{
+        [op didCompleteWithError:error];
+    });
     
     [self _unregisterTask:op];
 }

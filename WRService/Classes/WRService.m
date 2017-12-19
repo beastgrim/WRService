@@ -135,7 +135,12 @@
 }
 
 - (void)cancelAllTasks {
-    
+    [_defaultQueue getAllTasksWithCompletionHandler:^(NSArray<__kindof WROperation *> * _Nonnull tasks) {
+        for (WROperation *op in tasks)  [op cancel];
+    }];
+    [_backgroundQueue getAllTasksWithCompletionHandler:^(NSArray<__kindof WROperation *> * _Nonnull tasks) {
+        for (WROperation *op in tasks)  [op cancel];
+    }];
 }
 
 - (void)setAuthChallengeCallback:(void (^)(WROperationPriority, NSURLAuthenticationChallenge * _Nonnull, void (^ _Nonnull)(NSURLSessionAuthChallengeDisposition, NSURLCredential * _Nullable)))callback
