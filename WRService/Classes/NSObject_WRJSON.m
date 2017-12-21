@@ -19,6 +19,7 @@ WRKey WRDictOfClassKey = @"WRDictOfClassKey";
 WRKey WRClassNameKey = @"WRClassNameKey";
 WRKey WRClassPropertyNameForDictKey = @"WRClassPropertyNameForDictKey";
 WRKey WRRequiredPropertiesKey = @"WRRequiredPropertiesKey";
+WRKey WROptionalPropertiesKey = @"WROptionalPropertiesKey";
 
 WRKey WRJsonClassMapKey = @"WRJsonClassMapKey";
 WRKey WRDateFormatterKey = @"WRDateFormatterKey";
@@ -421,8 +422,12 @@ typedef NS_ENUM(NSInteger, WRError) {
     
     BOOL required = NO;
     NSSet *requiredProperties = options[WRRequiredPropertiesKey];
+    NSSet *optionalProperties = options[WROptionalPropertiesKey];
     if (requiredProperties) {
         required = [requiredProperties containsObject:propertyName];
+    }
+    else if (optionalProperties) {
+        required = ![optionalProperties containsObject:propertyName];
     }
     if (required && val == nil) {
         NSDictionary *info = @{NSLocalizedDescriptionKey:[NSString stringWithFormat:@"[%@] Required property '%@' is nil", NSStringFromClass(self.class), propertyName]};

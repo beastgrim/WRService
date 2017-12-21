@@ -38,6 +38,11 @@ extern NSString * const WRPropertyNamesMapKey;
  */
 extern NSString * const WRRequiredPropertiesKey;
 
+/**
+ @brief Use this for decoding Class with optional properties. Value is NSSet of strings. If JSON doesn't have any key out of set -wrDecodeFromJSON:options:error: return an error. If 'WRRequiredPropertiesKey' option is defined, this option will ignored.
+ */
+extern NSString * const WROptionalPropertiesKey;
+
 
 @interface NSObject (WRJSON)
 
