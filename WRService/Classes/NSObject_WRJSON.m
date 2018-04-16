@@ -85,7 +85,7 @@ typedef NS_ENUM(NSInteger, WRError) {
     NSArray *names = [self _encodedPropertyNames];
     NSDateFormatter *df = [NSDateFormatter new];
     df.locale = [NSLocale localeWithLocaleIdentifier:@"en_US_POSIX"];
-  NSString *dateFormat = options[WRDateFormatKey];
+    NSString *dateFormat = options[WRDateFormatKey];
     df.dateFormat = dateFormat;
     
     NSDictionary *map = options[WRPropertyNamesMapKey];
@@ -438,6 +438,7 @@ typedef NS_ENUM(NSInteger, WRError) {
         }
         return;
     }
+    else if ([val isKindOfClass:[NSNull class]]) return;
     
     NSError *outError = nil;
     
